@@ -19,6 +19,7 @@ looker.plugins.visualizations.add({
     // Set up the initial state of the visualization
     create: function(element, config) {
   
+      
       // Insert a <style> tag with some styles we'll use later.
       element.innerHTML = `
         <style>
@@ -37,7 +38,11 @@ looker.plugins.visualizations.add({
             font-size: 18px;
           }
         </style>
-      `;
+        <span class="material-icons">face</span>
+        <box-icon name="rocket"></box-icon>
+        <box-icon  type="solid" name="rocket"></box-icon>
+        <i data-feather="circle"></i>
+        `;
   
       // Create a container element to let us center the text.
       var container = element.appendChild(document.createElement("div"));
