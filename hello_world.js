@@ -1,10 +1,6 @@
 looker.plugins.visualizations.add({
-    // Id and Label are legacy properties that no longer have any function besides documenting
-    // what the visualization used to have. The properties are now set via the manifest
-    // form within the admin/visualizations page of Looker
-    id: "hello_world",
-    label: "Hello World",
-    options: {
+
+  options: {
       font_size: {
         type: "string",
         label: "Font Size",
@@ -14,6 +10,10 @@ looker.plugins.visualizations.add({
         ],
         display: "radio",
         default: "large"
+      },
+      icon: {
+        type: "string",
+        placeholder: "rocket"
       }
     },
     // Set up the initial state of the visualization
@@ -38,10 +38,8 @@ looker.plugins.visualizations.add({
             font-size: 18px;
           }
         </style>
-        <span class="material-icons">face</span>
         <box-icon name="rocket"></box-icon>
         <box-icon  type="solid" name="rocket"></box-icon>
-        <i data-feather="circle"></i>
         `;
   
       // Create a container element to let us center the text.
@@ -63,7 +61,25 @@ looker.plugins.visualizations.add({
         this.addError({title: "No Dimensions", message: "This chart requires dimensions."});
         return;
       }
-  
+
+      function addBoxIconToElement(element, config) {
+        var boxIcon = document.createElement('box-icon');
+        boxIcon.setAttribute('name', config.icon);
+        element.appendChild(boxIcon);
+      }
+
+      function getDataFromLooker(data, queryResponse) {
+        var dataFromLooker = [];
+        for (var row of data) {
+          var rowToPush = {};
+          for (var cell of queryResponse.fields.dimensions) {
+            rowToPush[cell.name] = row[cell.name].value;
+          }
+          dataFromLooker.push(rowToPush);
+        }
+        return dataFromLooker;
+      }
+
       // Grab the first cell of the data
       var firstRow = data[0];
       var firstCell = firstRow[queryResponse.fields.dimensions[0].name];
