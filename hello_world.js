@@ -19,7 +19,6 @@ looker.plugins.visualizations.add({
     // Set up the initial state of the visualization
     create: function(element, config) {
   
-      
       // Insert a <style> tag with some styles we'll use later.
       element.innerHTML = `
         <style>
