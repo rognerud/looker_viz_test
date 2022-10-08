@@ -58,20 +58,10 @@ function handleErrors(vis, resp, options) {
 function drawChart() {
 	var data = getDataTable([['']['']]);
 	chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
-	//chart.draw(data);
+	chart.draw(data);
 }
 
-function iterateOverArray(array, dimensions) {
-    let result = []
-    for (let i = 0; i < array.length; i++) {
-        let row_result = []
-        for (let j = 0; j < dimensions[i].length; j++) {
-            row_result.push(array[i][j])
-        }
-        result.push(row_result)
-    }
-    return result
-}
+
 
 looker.plugins.visualizations.add({
     options: {
@@ -86,9 +76,29 @@ looker.plugins.visualizations.add({
             min_dimensions: 3, max_dimensions: 4,
             min_measures: 0, max_measures: 1
         })) return
-        
-        var array_columns = [];
 
+        function extract_inner_values(item, result) {
+          // return the value if it exists, otherwise return the empty string
+              if (item.hasOwnProperty('value')) {
+                  result.push(item.value);
+              }
+          
+          }
+              
+          function extract_values(item, dimensions, result) {
+              let row_result = []
+              dimensions.forEach(dimension => extract_inner_values(item[dimension.name], row_result))
+              result.push(row_result);
+          }
+          
+          function iterateOverArray(data, dimensions) {
+              let result = []
+              data.forEach(item => extract_values(item, dimensions, result))
+              return result
+          }
+
+        var array_columns = [];
+        console.log(queryResponse);
         if (queryResponse.fields.dimensions.length = 4) {
             array_columns.push(queryResponse.fields.dimension_like[0])
             array_columns.push(queryResponse.fields.dimension_like[1])
@@ -99,6 +109,7 @@ looker.plugins.visualizations.add({
             array_columns.push(queryResponse.fields.dimension_like[1])
             array_columns.push(queryResponse.fields.dimension_like[2])
         }
+        console.log(array_columns);
         
         array = iterateOverArray(data, array_columns)
 
