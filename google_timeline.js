@@ -2,10 +2,12 @@ google.charts.load("current", {packages:["timeline"]});
 
 var chart, updateRequested, value = 0;
 
-function getDataTable(data) {
-    return google.visualization.arrayToDataTable(data);
+function getDataTable() {
+	return google.visualization.arrayToDataTable([
+		['Label', 'Value'],
+		['', value]
+	]);
 }
-
 
 function drawChart() {
 	var data = getDataTable([['']['']]);
@@ -23,8 +25,8 @@ looker.plugins.visualizations.add({
 	updateAsync: function(data, element, config, queryResponse, details, done){
         console.log(data);
         console.log(queryResponse);
-
         chart && chart.draw(getDataTable(data));
+        
 		done()
 	},
     });
