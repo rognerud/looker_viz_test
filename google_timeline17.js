@@ -2,8 +2,31 @@ google.charts.load("current", {packages:["timeline"]});
 
 var chart, updateRequested, value = 0;
 
-function getDataTable(data) {
-	return google.visualization.arrayToDataTable(data);
+function removePartOfString(string, part) {
+    var index = string.indexOf(part);
+    if (index > -1) {
+        return string.substring(0, index) + string.substring(index + part.length);
+    }
+    return string;
+}
+
+function create_column(column_item, adjusted_columns) {
+    var column_adj = {};
+    column_adj['id'] = column_item.name;
+    column_adj['label'] = column_item.label_short;
+    column_adj['type'] = removePartOfString(column_item.type,'_date');
+    adjusted_columns.push(column_adj);
+}
+
+function getDataTable(data, array_columns) {
+	adjusted_columns = [];
+  console.log(array_columns);
+  array_columns.forEach(dim => create_column(dim, adjusted_columns))
+
+  data.unshift(adjusted_columns);
+  console.log(data);
+
+  return google.visualization.arrayToDataTable(data);
 }
 
 function handleErrors(vis, resp, options) {
@@ -56,9 +79,9 @@ function handleErrors(vis, resp, options) {
   }
 
 function drawChart() {
-	var data = getDataTable([['']['']]);
+	//var data = getDataTable([['']], [{'id': 'id', 'label': 'label', 'type': 'string'}]);
 	chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
-	chart.draw(data);
+	// chart.draw(data);
 }
 
 
@@ -77,17 +100,21 @@ looker.plugins.visualizations.add({
             min_measures: 0, max_measures: 1
         })) return
 
-        function extract_inner_values(item, result) {
+        function extract_inner_values(item, dimension, result) {
           // return the value if it exists, otherwise return the empty string
-              if (item.hasOwnProperty('value')) {
+            if (item.hasOwnProperty('value')) {
+              if (dimension.type == 'date_date') {
+                  result.push(new Date(item.value));
+              } else {
                   result.push(item.value);
               }
           
           }
+        }
               
           function extract_values(item, dimensions, result) {
               let row_result = []
-              dimensions.forEach(dimension => extract_inner_values(item[dimension.name], row_result))
+              dimensions.forEach(dimension => extract_inner_values(item[dimension.name], dimension, row_result))
               result.push(row_result);
           }
           
@@ -109,13 +136,12 @@ looker.plugins.visualizations.add({
             array_columns.push(queryResponse.fields.dimension_like[1])
             array_columns.push(queryResponse.fields.dimension_like[2])
         }
-        console.log(array_columns);
         
         array = iterateOverArray(data, array_columns)
 
         console.log(array);
-        chart && chart.draw(getDataTable(array));
+        chart && chart.draw(getDataTable(array, array_columns));
         
 		done()
-	},
+	}
     });
