@@ -1,23 +1,14 @@
 google.charts.load("current", {packages:["timeline"]});
 
-var chart, updateRequested, value = 0;
-
-function removePartOfString(string, part) {
-    var index = string.indexOf(part);
-    if (index > -1) {
-        return string.substring(0, index) + string.substring(index + part.length);
-    }
-    return string;
-}
 
 function create_column(column_item, adjusted_columns, index) {
     var column_adj = {};
     column_adj['label'] = column_item.label_short;
 
-    if (index >= 1 && index <= 2) {
+    if (available_columns - index <= 2) {
       column_adj['id'] = column_item.name;
       column_adj['type'] = 'date'
-    } else if (index = 4) {
+    } else if (available_columns == 5 && index == 2) {
       column_adj['role'] = 'tooltip'
       column_adj['type'] = 'string'
     } else {
@@ -28,10 +19,10 @@ function create_column(column_item, adjusted_columns, index) {
     adjusted_columns.push(column_adj);
 }
 
-function getDataTable(data, array_columns) {
+function getDataTable(data, array_columns, available_columns) {
 	adjusted_columns = [];
   console.log(array_columns);
-  array_columns.forEach((dim, index) => create_column(dim, adjusted_columns, index))
+  array_columns.forEach((dim, index) => create_column(dim, adjusted_columns, index, available_columns))
 
   data.unshift(adjusted_columns);
   console.log(data);
@@ -94,6 +85,7 @@ function handleErrors(vis, resp, options) {
 
 function drawChart() {
 	chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
+  chart.draw()
 }
 
 
@@ -108,7 +100,10 @@ looker.plugins.visualizations.add({
   },
 	
   create: function(element, config){
-		element.innerHTML = '<div id="vis-chart"/></div>';
+		element.innerHTML = `
+    <div id="vis-chart" style="height: 100%;"></div>
+    `;
+    chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
 		google.charts.setOnLoadCallback(drawChart);
 	},
 
@@ -119,11 +114,11 @@ looker.plugins.visualizations.add({
             min_measures: 0, max_measures: 0
         })) return
 
-        function extract_inner_values(item, dimension, result, index) {
+        function extract_inner_values(item, dimension, result, index, available_columns) {
           // return the value if it exists, otherwise return the empty string
-          if (index >= 1 && index <= 2) {
+          if (available_columns - index  <= 2) {
             result.push(new Date(item.value));
-          } else if (index = 4) {
+          } else if (available_columns == 5 && index == 2) {
             if (item.hasOwnProperty('html')) {
               result.push(item.html);
             } else {
@@ -134,32 +129,33 @@ looker.plugins.visualizations.add({
           }
         }
               
-          function extract_values(item, dimensions, result) {
+          function extract_values(item, dimensions, result, available_columns) {
               let row_result = []
-              dimensions.forEach((dimension, index) => extract_inner_values(item[dimension.name], dimension, row_result, index))
+              dimensions.forEach((dimension, index) => extract_inner_values(item[dimension.name], dimension, row_result, index, available_columns))
               result.push(row_result);
           }
           
-          function iterateOverArray(data, dimensions) {
+          function iterateOverArray(data, dimensions, available_columns) {
               let result = []
-              data.forEach(item => extract_values(item, dimensions, result))
+              data.forEach(item => extract_values(item, dimensions, result, available_columns))
               return result
           }
 
         var array_columns = [];
         console.log(queryResponse);
-        array_columns = queryResponse.fields.dimension_like.slice(0, queryResponse.fields.dimensions.length);
+        available_columns = queryResponse.fields.dimensions.length;
+        array_columns = queryResponse.fields.dimension_like.slice(0, available_columns);
         
         var timeline_options = {
           colors: ['#6F03FF', '#FFBF94', '#DEB2FA', '#FFF48D', '#F4B3BB','#BADAF8', '#D2FCC3'],
-          timeline: { rowLabelStyle: {fontName: 'Arial'},
-                      barLabelStyle: { fontName: 'Arial'} }
+          timeline: { fontName: 'Helvetica' },
+          chartArea:{left:0,top:0,width:"100%",height:"100%"}
         };
 
-        array = iterateOverArray(data, array_columns)
+        array = iterateOverArray(data, array_columns, available_columns)
 
         console.log(array);
-        chart && chart.draw(getDataTable(array, array_columns), timeline_options);
+        element.chart.draw(getDataTable(array, array_columns, available_columns), timeline_options);
         
 		done()
 	}
