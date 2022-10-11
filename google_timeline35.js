@@ -1,5 +1,6 @@
 google.charts.load("current", {packages:["timeline"]});
 
+var chart;
 
 function create_column(column_item, adjusted_columns, index) {
     var column_adj = {};
@@ -103,7 +104,6 @@ looker.plugins.visualizations.add({
 		element.innerHTML = `
     <div id="vis-chart" style="height: 100%;"></div>
     `;
-    chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
 		google.charts.setOnLoadCallback(drawChart);
 	},
 
@@ -155,7 +155,8 @@ looker.plugins.visualizations.add({
         array = iterateOverArray(data, array_columns, available_columns)
 
         console.log(array);
-        element.chart.draw(getDataTable(array, array_columns, available_columns), timeline_options);
+        
+        chart && chart.draw(getDataTable(array, array_columns, available_columns), timeline_options);
         
 		done()
 	}
