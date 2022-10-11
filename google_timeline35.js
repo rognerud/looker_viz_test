@@ -84,12 +84,6 @@ function handleErrors(vis, resp, options) {
     return true;
   }
 
-function drawChart() {
-	chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
-  chart.draw()
-}
-
-
 
 looker.plugins.visualizations.add({
   options: {
@@ -104,7 +98,8 @@ looker.plugins.visualizations.add({
 		element.innerHTML = `
     <div id="vis-chart" style="height: 100%;"></div>
     `;
-		google.charts.setOnLoadCallback(drawChart);
+    chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
+		google.charts.setOnLoadCallback(updateAsync);
 	},
 
 	updateAsync: function(data, element, config, queryResponse, details, done){
