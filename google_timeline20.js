@@ -10,18 +10,28 @@ function removePartOfString(string, part) {
     return string;
 }
 
-function create_column(column_item, adjusted_columns) {
+function create_column(column_item, adjusted_columns, index) {
     var column_adj = {};
-    column_adj['id'] = column_item.name;
     column_adj['label'] = column_item.label_short;
-    column_adj['type'] = removePartOfString(column_item.type,'_date');
+
+    if (index >= 1 && index <= 2) {
+      column_adj['id'] = column_item.name;
+      column_adj['type'] = 'date'
+    } else if (index = 4) {
+      column_adj['role'] = 'tooltip'
+      column_adj['type'] = 'string'
+    } else {
+      column_adj['id'] = column_item.name;
+      column_adj['type'] = 'string'
+    }
+
     adjusted_columns.push(column_adj);
 }
 
 function getDataTable(data, array_columns) {
 	adjusted_columns = [];
   console.log(array_columns);
-  array_columns.forEach(dim => create_column(dim, adjusted_columns))
+  array_columns.forEach((dim, index) => create_column(dim, adjusted_columns, index))
 
   data.unshift(adjusted_columns);
   console.log(data);
@@ -35,7 +45,11 @@ function handleErrors(vis, resp, options) {
       if (max) {
         message += " to " + max
       }
-      message += " " + field
+      message += " " + field + " to use this visualization."
+      message += " First field is the row label, second is the start date, third is the end date."
+      message += " You can add more fields to add more information to the visualization."
+      message += " The fourth field is the group label, and the fifth can be a tooltip."
+      message += " The fifth field will use html if the field has a html tag defined."
       return message
     }
   
@@ -79,42 +93,50 @@ function handleErrors(vis, resp, options) {
   }
 
 function drawChart() {
-	//var data = getDataTable([['']], [{'id': 'id', 'label': 'label', 'type': 'string'}]);
 	chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
-	// chart.draw(data);
 }
 
 
 
 looker.plugins.visualizations.add({
-    options: {
-    },
-	create: function(element, config){
+  options: {
+      info: {
+        type: "string",
+        label: "google timelines from google charts library. @gisle",
+        display: "text"
+      }
+  },
+	
+  create: function(element, config){
 		element.innerHTML = '<div id="vis-chart"/></div>';
 		google.charts.setOnLoadCallback(drawChart);
 	},
+
 	updateAsync: function(data, element, config, queryResponse, details, done){
         if (!handleErrors(this, queryResponse, {
             min_pivots: 0, max_pivots: 0,
-            min_dimensions: 3, max_dimensions: 4,
-            min_measures: 0, max_measures: 1
+            min_dimensions: 3, max_dimensions: 5,
+            min_measures: 0, max_measures: 0
         })) return
 
-        function extract_inner_values(item, dimension, result) {
+        function extract_inner_values(item, dimension, result, index) {
           // return the value if it exists, otherwise return the empty string
-            if (item.hasOwnProperty('value')) {
-              if (dimension.type == 'date_date') {
-                  result.push(new Date(item.value));
-              } else {
-                  result.push(item.value);
-              }
-          
+          if (index >= 1 && index <= 2) {
+            result.push(new Date(item.value));
+          } else if (index = 4) {
+            if (item.hasOwnProperty('html')) {
+              result.push(item.html);
+            } else {
+              result.push(item.value);
+            }
+          } else {
+            result.push(item.value);
           }
         }
               
           function extract_values(item, dimensions, result) {
               let row_result = []
-              dimensions.forEach(dimension => extract_inner_values(item[dimension.name], dimension, row_result))
+              dimensions.forEach((dimension, index) => extract_inner_values(item[dimension.name], dimension, row_result, index))
               result.push(row_result);
           }
           
@@ -126,22 +148,19 @@ looker.plugins.visualizations.add({
 
         var array_columns = [];
         console.log(queryResponse);
-        if (queryResponse.fields.dimensions.length = 4) {
-            array_columns.push(queryResponse.fields.dimension_like[0])
-            array_columns.push(queryResponse.fields.dimension_like[1])
-            array_columns.push(queryResponse.fields.dimension_like[2])
-            array_columns.push(queryResponse.fields.dimension_like[3])
-        } else {
-            array_columns.push(queryResponse.fields.dimension_like[0])
-            array_columns.push(queryResponse.fields.dimension_like[1])
-            array_columns.push(queryResponse.fields.dimension_like[2])
-        }
+        array_columns = queryResponse.fields.dimension_like.slice(0, queryResponse.fields.dimensions.length);
         
+        var timeline_options = {
+          colors: ['#6F03FF', '#FFBF94', '#DEB2FA', '#FFF48D', '#F4B3BB','#BADAF8', '#D2FCC3'],
+          timeline: { rowLabelStyle: {fontName: 'Arial'},
+                      barLabelStyle: { fontName: 'Arial'} }
+        };
+
         array = iterateOverArray(data, array_columns)
 
         console.log(array);
-        chart && chart.draw(getDataTable(array, array_columns));
+        chart && chart.draw(getDataTable(array, array_columns), timeline_options);
         
 		done()
 	}
-    });
+  });
