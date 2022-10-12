@@ -1,6 +1,7 @@
 google.charts.load("current", {packages:["timeline"]});
 
-var chart;
+var chart
+let loaded = false;
 
 function create_column(column_item, adjusted_columns, index) {
     var column_adj = {};
@@ -22,28 +23,24 @@ function create_column(column_item, adjusted_columns, index) {
 
 function getDataTable(data, array_columns, available_columns) {
 	adjusted_columns = [];
-  console.log(array_columns);
   array_columns.forEach((dim, index) => create_column(dim, adjusted_columns, index, available_columns))
-
   data.unshift(adjusted_columns);
-  console.log(data);
-
   return google.visualization.arrayToDataTable(data);
 }
 
 function handleErrors(vis, resp, options) {
     function messageFromLimits(min, max, field) {
-      let message = "You need " + min
-      if (max) {
-        message += " to " + max
+        let message = "You need " + min
+        if (max) {
+          message += " to " + max
+        }
+        message += " " + field + " to use this visualization. <br>"
+        message += " First field is the row label, the last to fields must be start and end date. (or timestamp)<br>"
+        message += " You can add more fields to add more information to the visualization. <br>"
+        message += " The second field can be a group label, and the third field can be a tooltip. <br>"
+        message += " The tooltip field will use html if the field has a html tag defined. <br>"
+        return message
       }
-      message += " " + field + " to use this visualization."
-      message += " First field is the row label, second is the start date, third is the end date."
-      message += " You can add more fields to add more information to the visualization."
-      message += " The fourth field is the group label, and the fifth can be a tooltip."
-      message += " The fifth field will use html if the field has a html tag defined."
-      return message
-    }
   
     if ((resp.fields.pivots.length < options.min_pivots) ||
         (resp.fields.pivots.length > options.max_pivots)) {
@@ -84,11 +81,28 @@ function handleErrors(vis, resp, options) {
     return true;
   }
 
-function drawChart() {
-	chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
-  chart.draw()
-}
 
+
+
+function selectHandler(e) {
+  var selection = chart.getSelection();
+  var message = '';
+
+  for (var i = 0; i < selection.length; i++) {
+    var item = selection[i];
+    if (item.row != null && item.column != null) {
+      message += '{row:' + item.row + ',column:' + item.column + '}';
+    } else if (item.row != null) {
+      message += '{row:' + item.row + '}';
+    } else if (item.column != null) {
+      message += '{column:' + item.column + '}';
+    }
+  }
+  if (message == '') {
+    message = 'nothing';
+  }
+  alert('You selected ' + message);
+}
 
 
 looker.plugins.visualizations.add({
@@ -101,6 +115,14 @@ looker.plugins.visualizations.add({
   },
 	
   create: function(element, config){
+
+    function drawChart() {
+      chart = new google.visualization.Timeline(document.getElementById('vis-chart'));
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      loaded = true;
+      console.log("chart loaded");
+    }
+
 		element.innerHTML = `
     <div id="vis-chart" style="height: 100%;"></div>
     `;
@@ -117,15 +139,15 @@ looker.plugins.visualizations.add({
         function extract_inner_values(item, dimension, result, index, available_columns) {
           // return the value if it exists, otherwise return the empty string
           if (available_columns - index  <= 2) {
-            result.push(new Date(item.value));
+            result.push(new Date(LookerCharts.Utils.textForCell(item)));
           } else if (available_columns == 5 && index == 2) {
             if (item.hasOwnProperty('html')) {
-              result.push(item.html);
+              result.push(LookerCharts.Utils.htmlForCell(item));
             } else {
-              result.push(item.value);
+              result.push(LookerCharts.Utils.textForCell(item));
             }
           } else {
-            result.push(item.value);
+            result.push(LookerCharts.Utils.textForCell(item));
           }
         }
               
@@ -142,7 +164,6 @@ looker.plugins.visualizations.add({
           }
 
         var array_columns = [];
-        console.log(queryResponse);
         available_columns = queryResponse.fields.dimensions.length;
         array_columns = queryResponse.fields.dimension_like.slice(0, available_columns);
         
@@ -151,12 +172,32 @@ looker.plugins.visualizations.add({
           timeline: { fontName: 'Helvetica' },
           chartArea:{left:0,top:0,width:"100%",height:"100%"}
         };
+        
+        console.log(details);
 
         array = iterateOverArray(data, array_columns, available_columns)
 
-        console.log(array);
-        chart && chart.draw(getDataTable(array, array_columns, available_columns), timeline_options);
+        function waitForCondition() {
+          return new Promise(resolve => {
+            function checkFlag() {
+              if (loaded == true) {
+                resolve();
+              } else {
+                window.setTimeout(checkFlag, 1000); 
+              }
+            }
+            checkFlag();
+          });
+        }
+
+        async function populateChart(array, array_columns, available_columns) {
+          await waitForCondition();
+          var data = getDataTable(array, array_columns, available_columns);
+          chart && chart.draw(data, timeline_options);
+          done();
+        }
         
-		done()
+        populateChart(array, array_columns, available_columns) ;
+        
 	}
   });
