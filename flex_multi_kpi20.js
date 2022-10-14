@@ -53,13 +53,14 @@ looker.plugins.visualizations.add({
       var firstRow = data[0];
       var all_columns = [];
       console.log(queryResponse)
-      all_columns = all_columns.concat(queryResponse.fields.dimensions);
-      all_columns = all_columns.concat(queryResponse.fields.measures);
+      all_columns = all_columns.concat(queryResponse.fields.dimension_like);
+      all_columns = all_columns.concat(queryResponse.fields.measure_like);
       console.log(all_columns);
-      var kpi1 = all_columns[config.kpi_1_column];
-      console.log("kpi1: " + kpi1);
-      console.log("kpi1: " + kpi1.value);
-
+      var kpi1 = all_columns.at(config.kpi_1_column);
+      console.log(kpi1);
+      console.log(kpi1.name);
+      console.log(firstRow);
+      console.log(firstRow[kpi1.name]);
       function addKPI(kpi, element) {
         var kpi_element = document.createElement("div");
         kpi_element.className = "kpi";
@@ -67,7 +68,7 @@ looker.plugins.visualizations.add({
         document.getElementById('flex-multi-kpi').appendChild(kpi_element);
       }
 
-      addKPI(kpi1, element);
+      addKPI(firstRow[kpi1.name].value, element);
       // We are done rendering! Let Looker know.
       done()
     }
