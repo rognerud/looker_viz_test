@@ -20,7 +20,7 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         default: "medium"
       },
-      kpi_1_text_color: {
+      kpi_1_value_color: {
         type: "string",
         label: "color of kpi 1",
         display: "color",
@@ -29,37 +29,28 @@ looker.plugins.visualizations.add({
       },
       kpi_1_title: {
         type: "string",
-        label: "title of kpi 1",
+        label: "title of kpi 1, if empty, uses label",
         display: "text",
         section: "KPI1",
       },
-      kpi_1_positive_icon: {
+      kpi_1_title_color: {
         type: "string",
-        label: "show icon for kpi 1 if positive value",
-        display: "string",
+        label: "color of title of kpi 1",
+        display: "color",
         section: "KPI1",
-        display_size: "half",
-      },      
-      kpi_1_negative_icon: {
-        type: "string",
-        label: "show icon for kpi 1 if negative value",
-        display: "string",
-        section: "KPI1",
-        display_size: "half",
+        default: "#000000"
       },
-      kpi_1_icon_positive_color: {
+      kpi_1_icon: {
+        type: "string",
+        label: "display icon for kpi 1",
+        display: "string",
+        section: "KPI1",
+      },      
+      kpi_1_icon_color: {
         type: "string",
         label: "color of icon for kpi 1 if positive value",
         display: "color",
         section: "KPI1",
-        display_size: "half",
-      },
-      kpi_1_icon_negative_color: {
-        type: "string",
-        label: "color of icon for kpi 1 if negative value",
-        display: "color",
-        section: "KPI1",
-        display_size: "half",
       },
       kpi_1_icon_only: {
         type: "boolean",
@@ -80,6 +71,13 @@ looker.plugins.visualizations.add({
         label: "column number for kpi 1 comparison 2",
         display: "number",
         section: "KPI1",
+      },
+      kpi_1_comparisons_visible: {
+        type: "boolean",
+        label: "show comparisons for kpi 1",
+        display: "boolean",
+        section: "KPI1",
+        default: true,
       },
       kpi_1_comparison_color_positive: {
         type: "string",
@@ -103,9 +101,12 @@ looker.plugins.visualizations.add({
           {"Color comparison value": "comparison-value"},
           {"Color comparison icon": "comparison-icon"},
           {"Color comparison": "comparison-both"},
+          {"Color main value": "main-value"},
+          {"Color main icon": "main-icon"},
+          {"Color main": "main"},
         ],
         section: "KPI1",
-        default: "value"
+        default: "comparison-icon"
       },
       kpi_1_comparison_positive_icon: {
         type: "string",
@@ -119,25 +120,12 @@ looker.plugins.visualizations.add({
         display: "string",
         section: "KPI1",
       },
-      main_element_additional_css: {
-        type: "string",
-        label: "additional css for main element",
-        display: "string",
-        section: "Main",
-      },
-      main_element_color_column: {
-        type: "number",
-        label: "column number for main element color",
-        display: "number",
-        section: "Main",
-      },
       main_element_dividers_between_kpis: {
         type: "boolean",
         label: "show dividers between kpis",
         display: "boolean",
         section: "Main",
         default: false,
-        display_size: "half"
       },
     },
   
@@ -154,22 +142,9 @@ looker.plugins.visualizations.add({
             color: #fff;
         }
         
-        .bg-c-blue {
-            background: linear-gradient(45deg,#4099ff,#73b4ff);
-        }
-        
         .kpi-1-card {
             background: linear-gradient(45deg,#2ed8b6,#59e0c5);
         }
-        
-        .bg-c-yellow {
-            background: linear-gradient(45deg,#FFB64D,#ffcb80);
-        }
-        
-        .bg-c-pink {
-            background: linear-gradient(45deg,#FF5370,#ff869a);
-        }
-        
         
         .card {
             border-radius: 5px;
@@ -203,9 +178,12 @@ looker.plugins.visualizations.add({
           <div class="col-md-4 col-xl-3" id="kpi-1">
               <div class="card kpi-1-card order-card">
                   <div class="card-block">
-                      <h6 class="m-b-20" id="kpi-1-title">Orders Received</h6>
-                      <h2 class="text-right" id="kpi-1-value-and-icon"><i class="fa fa-cart-plus f-left"></i><span>486</span></h2>
-                      <p class="m-b-0" id="kpi-1-comparison-title">Completed Orders<span class="f-right" id="kpi-1-comparison-value">351</span></p>
+                      <h4 class="kpi-title" id="kpi-1-title">Orders Received</h6>
+                      <h2 class="text-right id="kpi-1-icon-solo></h2>
+                      <h2 class="kpi-main-and-icon" id="kpi-1-value-and-icon"><span>486</span></h2>
+                      <h6 class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-1-icon"></span><span class="f-right" id="kpi-1-comparison-1-value">351</span></p>
+                      <h6 class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-2-icon"></span><span class="f-right" id="kpi-1-comparison-2-value">351</span></p>
+                    <div class="kpi>
                   </div>
               </div>
           </div>
