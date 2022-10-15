@@ -135,32 +135,22 @@ looker.plugins.visualizations.add({
       element.innerHTML = `
       <style>
         body{
-            margin-top:20px;
-            background:#FAFAFA;
         }
         .order-card {
-            color: #fff;
         }
         
         .kpi-1-card {
         }
         
         .card {
-            border-radius: 5px;
-            -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
-            box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
-            border: none;
-            margin-bottom: 30px;
-            -webkit-transition: all 0.3s ease-in-out;
-            transition: all 0.3s ease-in-out;
         }
         
         .card .card-block {
-            padding: 25px;
+            padding: 1rem;
         }
         
         .order-card i {
-            font-size: 26px;
+            font-size: 2rem;
         }
         
         .f-left {
@@ -177,15 +167,16 @@ looker.plugins.visualizations.add({
           <div class="col-md-4 col-xl-3" id="kpi-1">
               <div class="card kpi-1-card order-card">
                   <div class="card-block">
-                      <h4 class="kpi-title" id="kpi-1-title">Orders Received</h6>
-                      <h2 class="kpi-icon id="kpi-1-icon-solo><span class="main-icon" id="kpi-1-center-1-icon"></span></h2>
-                      <h2 class="kpi-main-and-icon" id="kpi-1-value-and-icon"><span class="kpi-side-icon" id="kpi-1-side-1-icon"></span><span id="kpi-1-value>486</span></h2>
-                      <h6 class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-1-icon"></span><span class="f-right" id="kpi-1-comparison-1-value">351</span></p>
-                      <h6 class="kpi-comparison" id="kpi-1-comparison-2-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-2-icon"></span><span class="f-right" id="kpi-1-comparison-2-value">351</span></p>
-                    <div class="kpi>
+                      <div class="kpi-icon id="kpi-1-icon-solo><span class="main-icon" id="kpi-1-center-1-icon"></span></div>
+                      <div class="kpi-main-and-icon" id="kpi-1-value-and-icon"><span class="kpi-side-icon" id="kpi-1-side-1-icon"></span><span id="kpi-1-value">486</span></div>
+                      <div class="kpi-title" id="kpi-1-title">Orders Received</div>
+                      <div class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-1-icon"></span><span class="f-right" id="kpi-1-comparison-1-value">351</span></div>
+                      <div class="kpi-comparison" id="kpi-1-comparison-2-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-2-icon"></span><span class="f-right" id="kpi-1-comparison-2-value">351</span></div>
                   </div>
               </div>
           </div>
+      </div>
+      </div>
       `;
         // Create a container element to let us center the text.
       var container = element.appendChild(document.createElement("div"));
@@ -197,21 +188,45 @@ looker.plugins.visualizations.add({
   
       // Clear any errors from previous updates
       this.clearErrors();
-      
       // Grab the first cell of the data
       var firstRow = data[0];
+
       var all_columns = [];
       all_columns = all_columns.concat(queryResponse.fields.dimension_like);
       all_columns = all_columns.concat(queryResponse.fields.measure_like);
 
-      var kpi1 = all_columns.at(config.kpi_1_column);
-      
-      if (config.kpi_1_positive_icon != null) {
-        var kpi1_positive_icon = config.kpi_1_positive_icon;
+      var kpi_1_column = all_columns.at(config.kpi_1_column);
+
+      if (kpi_1_comparison_column_1 != null) {
+        var kpi_1_comparison_column_1 = all_columns.at(config.kpi_1_comparison_column_1);
+        if (config.kpi_1_comparison_title_1 == null) {
+          var kpi_1_comparison_title_1 = config.kpi_1_comparison_title_1;
+        } else {
+          var kpi_1_comparison_title_1 = all_columns.at(config.kpi_1_comparison_column_1);
+        }
+        
+      }
+
+      if (kpi_1_comparison_column_2 != null) {
+        var kpi_1_comparison_column_2 = all_columns.at(config.kpi_1_comparison_column_2);
+      }
+
+      if (config.kpi_1_icon != null) {
+        var kpi_1_icon = config.kpi_1_icon;
       }
 
       var kpi1_value = firstRow[kpi1.name].value;
-      var kpi1_title = config.kpi_1_title;
+      
+      if (config.kpi_1_title != null) {
+        var kpi_1_title = config.kpi_1_title;
+      } else {
+        var kpi_1_title = kpi_1_column.label_short;
+      }
+      if (config.kpi_1_comparison_1_title != null) {
+        var kpi_1_comparison_1_title = config.kpi_1_comparison_1_title;
+      } else {
+        var kpi_1_comparison_1_title = kpi_1_column.label_short;
+      }
       var kpi1_comparison_title = config.kpi_1_comparison_title;
 
       console.log(queryResponse);
