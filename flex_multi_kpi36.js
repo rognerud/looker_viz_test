@@ -300,7 +300,7 @@ looker.plugins.visualizations.add({
           document.getElementById("kpi-1-1-title").innerHTML = "";
         }
         if (kpi_1_comparison_column_2 != null) {
-          document.getElementById("kpi-1-2-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_1.name]);
+          document.getElementById("kpi-1-2-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_2.name]);
           document.getElementById("kpi-1-2-title").innerHTML = kpi_1_comparison_column_2.label_short;;
         } else {
           document.getElementById("kpi-1-2-value").innerHTML = "";
