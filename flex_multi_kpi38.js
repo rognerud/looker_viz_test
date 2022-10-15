@@ -343,9 +343,9 @@ looker.plugins.visualizations.add({
       }
 
       if (kpi_1_comparison_value_2>0) {
-        colorizeKPIsecondary(config.comparison_element_positive_color, config.kpi_1_comparison_color_mode, 1)
+        colorizeKPIsecondary(config.comparison_element_positive_color, config.kpi_1_comparison_color_mode)
       } else if (kpi_1_comparison_value_2<0) {
-        colorizeKPIsecondary(config.comparison_element_negative_color, config.kpi_1_comparison_color_mode, 1)
+        colorizeKPIsecondary(config.comparison_element_negative_color, config.kpi_1_comparison_color_mode)
       }
 
       if (config.kpi_1_only_show_icon) {
