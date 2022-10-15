@@ -22,14 +22,14 @@ looker.plugins.visualizations.add({
       },
       kpi_1_value_color: {
         type: "string",
-        label: "color of kpi 1",
+        label: "color of value",
         display: "color",
         section: "KPI1",
         default: "#000000"
       },
       kpi_1_title: {
         type: "string",
-        label: "title of kpi 1, if empty, uses label",
+        label: "title, if empty, uses label",
         display: "text",
         section: "KPI1",
       },
@@ -43,12 +43,12 @@ looker.plugins.visualizations.add({
       kpi_1_icon: {
         type: "string",
         label: "display icon for kpi 1",
-        display: "string",
+        display: "text",
         section: "KPI1",
       },
       kpi_1_icon_color: {
         type: "string",
-        label: "color of icon for kpi 1 if positive value",
+        label: "color of icon",
         display: "color",
         section: "KPI1",
       },
@@ -71,16 +71,16 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         default: true,
       },
-      kpi_comparison_icon_positive: {
+      kpi_1_comparison_icon_positive: {
         type: "string",
         label: "replace icon for positive comparison",
-        display: "color",
+        display: "text",
         section: "KPI1",
       },
-      kpi_comparison_icon_negative: {
+      kpi_1_comparison_icon_negative: {
         type: "string",
         label: "replace icon for negative comparison",
-        display: "color",
+        display: "text",
         section: "KPI1",
       },
       kpi_1_comparison_color_mode: {
@@ -97,6 +97,20 @@ looker.plugins.visualizations.add({
         ],
         section: "KPI1",
         default: "comparison-icon"
+      },
+      kpi_1_only_show_icon: {
+        type: "boolean",
+        label: "only show icon for kpi 1",
+        display: "boolean",
+        section: "KPI1",
+        default: false,
+      },
+      kpi_1_comparison_text_color: {
+        type: "string",
+        label: "color of comparison text",
+        display: "color",
+        section: "KPI1",
+        default: "#000000"
       },
       main_element_dividers_between_kpis: {
         type: "boolean",
@@ -157,6 +171,7 @@ looker.plugins.visualizations.add({
       .card-comparison {
         padding: 0.25rem;
         margin: 0 auto;
+        font-size: 1rem;
       }
 
       </style>
@@ -168,7 +183,7 @@ looker.plugins.visualizations.add({
         </div>
         <div class="card-value" id="kpi-1-value">50%</div>
         <div class="card-title" id="kpi-1-title">title</div>
-        <div class="card-comparison">
+        <div class="card-comparison" id="kpi-1-comparisons">
           <span class="card-comparison-value" id="kpi-1-1-value">15 pp</span>
           <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span>    
           <span class="card-comparison-value" id="kpi-1-2-value">10 pp</span>
@@ -186,41 +201,12 @@ looker.plugins.visualizations.add({
       // Grab the first cell of the data
       var firstRow = data[0];
 
-      var all_columns = [];
-      all_columns = all_columns.concat(queryResponse.fields.dimension_like);
-      all_columns = all_columns.concat(queryResponse.fields.measure_like);
-
-      var kpi_1_column = all_columns.at(config.kpi_1_column);
-
-      document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_1_icon);
-      document.getElementById("kpi-1-icon").setAttribute("color", config.kpi_1_icon_color);
-      document.getElementById("kpi-1-value").innerHTML = firstRow[kpi_1_column.name].rendered;
-      
-      if (config.kpi_1_title != "") {
-        document.getElementById("kpi-1-title").innerHTML = config.kpi_1_title;
-      } else {
-        document.getElementById("kpi-1-title").innerHTML = kpi_1_column.label_short;
-      }
-      document.getElementById("kpi-1-title").style.color = config.kpi_1_title_color;
-      document.getElementById("kpi-1-value").style.color = config.kpi_1_value_color;
-
-
-      if (config.kpi_1_comparisons_visible) {
-        if (kpi_1_comparison_column_1 != null) {
-          var kpi_1_comparison_column_1 = all_columns.at(config.kpi_1_comparison_column_1);
-          document.getElementById("kpi-1-1-value").innerHTML = firstRow[kpi_1_comparison_column_1.name].rendered;
-          document.getElementById("kpi-1-1-title").innerHTML = config.kpi_1_comparison_title_1;
+      function getRenderedValue(cell) {
+        if (cell.hasOwnProperty('rendered')) {
+          return cell.rendered;
+        } else {
+          return cell.value;
         }
-        if (kpi_1_comparison_column_2 != null) {
-          var kpi_1_comparison_column_2 = all_columns.at(config.kpi_1_comparison_column_2);
-          document.getElementById("kpi-1-2-value").innerHTML = firstRow[kpi_1_comparison_column_2.name].rendered;
-          document.getElementById("kpi-1-2-title").innerHTML = config.kpi_1_comparison_title_2;
-        }
-      } else {
-        document.getElementById("kpi-1-1-value").innerHTML = "";
-        document.getElementById("kpi-1-1-title").innerHTML = "";
-        document.getElementById("kpi-1-2-value").innerHTML = "";
-        document.getElementById("kpi-1-2-title").innerHTML = "";
       }
 
       function adjustSizeKPI(size, kpi) {
@@ -233,10 +219,6 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-value").style.fontSize = "4rem";
         }
       }
-      adjustSizeKPI(config.kpi_1_size, "kpi-1");
-
-      var kpi1_comparison_value_1 = firstRow[kpi1_comparison_column_1.name].value;
-      var kpi1_comparison_value_2 = firstRow[kpi1_comparison_column_2.name].value;
 
       function colorizeKPImain(color, option) {
         if (option == "comparison-value") {
@@ -249,10 +231,10 @@ looker.plugins.visualizations.add({
         } else if (option == "main-value") {
           document.getElementById("kpi-1-value").style.color = color;
         } else if (option == "main-icon") {
-          document.getElementById("kpi-1-icon").style.color = color;
+          document.getElementById("kpi-1-icon").setAttribute("color", color);
         } else if (option == "main") {
           document.getElementById("kpi-1-value").style.color = color;
-          document.getElementById("kpi-1-icon").style.color = color;
+          document.getElementById("kpi-1-icon").setAttribute("color", color);
         }
       }
 
@@ -267,25 +249,98 @@ looker.plugins.visualizations.add({
         }
       }
 
+      function hideEverythingButIcon() {
+        document.getElementById("kpi-1-value").style.display = "none";
+        document.getElementById("kpi-1-1-value").style.display = "none";
+        document.getElementById("kpi-1-1-title").style.display = "none";
+        document.getElementById("kpi-1-2-value").style.display = "none";
+        document.getElementById("kpi-1-2-title").style.display = "none";
+      }
+      function unhideEverythingButIcon() {
+        document.getElementById("kpi-1-value").style.display = "block";
+        document.getElementById("kpi-1-1-value").style.display = "block";
+        document.getElementById("kpi-1-1-title").style.display = "block";
+        document.getElementById("kpi-1-2-value").style.display = "block";
+        document.getElementById("kpi-1-2-title").style.display = "block";
+      }
 
-      if (kpi1_comparison_value_1>0) {
+      console.log(queryResponse);
+      console.log(config);
+      console.log(details);
+
+      var all_columns = [];
+      all_columns = all_columns.concat(queryResponse.fields.dimension_like);
+      all_columns = all_columns.concat(queryResponse.fields.measure_like);
+
+      var kpi_1_column = all_columns.at(config.kpi_1_column);
+      var kpi_1_comparison_column_1 = all_columns.at(config.kpi_1_comparison_column_1);
+      var kpi_1_comparison_column_2 = all_columns.at(config.kpi_1_comparison_column_2);
+
+      document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_1_icon);
+      document.getElementById("kpi-1-icon").setAttribute("color", config.kpi_1_icon_color);
+      document.getElementById("kpi-1-value").innerHTML = getRenderedValue(firstRow[kpi_1_column.name]);
+
+      if (config.kpi_1_title != "") {
+        document.getElementById("kpi-1-title").innerHTML = config.kpi_1_title;
+      } else {
+        document.getElementById("kpi-1-title").innerHTML = kpi_1_column.label_short;
+      }
+      
+      document.getElementById("kpi-1-title").style.color = config.kpi_1_title_color;
+      document.getElementById("kpi-1-value").style.color = config.kpi_1_value_color;
+      document.getElementById("kpi-1-comparisons").style.color = config.kpi_1_comparison_text_color;
+
+
+      if (config.kpi_1_comparisons_visible) {
+        if (kpi_1_comparison_column_1 != null) {
+          document.getElementById("kpi-1-1-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_1.name]);
+          document.getElementById("kpi-1-1-title").innerHTML = kpi_1_comparison_column_1.label_short;;
+        } else {
+          document.getElementById("kpi-1-1-value").innerHTML = "";
+          document.getElementById("kpi-1-1-title").innerHTML = "";
+        }
+        if (kpi_1_comparison_column_2 != null) {
+          document.getElementById("kpi-1-2-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_1.name]);
+          document.getElementById("kpi-1-2-title").innerHTML = kpi_1_comparison_column_2.label_short;;
+        } else {
+          document.getElementById("kpi-1-2-value").innerHTML = "";
+          document.getElementById("kpi-1-2-title").innerHTML = "";
+        }
+      } else {
+        document.getElementById("kpi-1-1-value").innerHTML = "";
+        document.getElementById("kpi-1-1-title").innerHTML = "";
+        document.getElementById("kpi-1-2-value").innerHTML = "";
+        document.getElementById("kpi-1-2-title").innerHTML = "";
+      }
+
+      adjustSizeKPI(config.kpi_1_size, "kpi-1");
+
+      var kpi_1_comparison_value_1 = firstRow[kpi_1_comparison_column_1.name].value;
+      var kpi_1_comparison_value_2 = firstRow[kpi_1_comparison_column_2.name].value;
+
+      if (kpi_1_comparison_value_1>0) {
         colorizeKPImain(config.main_element_positive_color, config.kpi_1_comparison_color_mode)
         if (config.kpi_comparison_icon_positive != null) {
           document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_comparison_icon_positive);
         }
-      } else if (kpi1_comparison_value_1<0) {
+      } else if (kpi_1_comparison_value_1<0) {
         colorizeKPImain(config.main_element_negative_color, config.kpi_1_comparison_color_mode)
         if (config.kpi_comparison_icon_negative != null) {
           document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_comparison_icon_negative);
         }
       }
 
-      if (kpi1_comparison_value_2>0) {
+      if (kpi_1_comparison_value_2>0) {
         colorizeKPIsecondary(config.comparison_element_positive_color, config.kpi_1_comparison_color_mode, 1)
-      } else if (kpi1_comparison_value_2<0) {
+      } else if (kpi_1_comparison_value_2<0) {
         colorizeKPIsecondary(config.comparison_element_negative_color, config.kpi_1_comparison_color_mode, 1)
       }
-      
+
+      if (config.kpi_1_only_show_icon) {
+        hideEverythingButIcon();
+      } else {
+        unhideEverythingButIcon();
+      }
 
       done()
     }
