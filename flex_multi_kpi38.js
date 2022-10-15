@@ -298,18 +298,20 @@ looker.plugins.visualizations.add({
       
       document.getElementById("kpi-1-title").style.color = config.kpi_1_title_color;
       document.getElementById("kpi-1-value").style.color = config.kpi_1_value_color;
-      document.getElementById("kpi-1-comparisons").style.color = config.kpi_1_comparison_text_color;
-
+      document.getElementById("kpi-1-1-value").style.color = config.kpi_1_comparison_text_color;
+      document.getElementById("kpi-1-2-value").style.color = config.kpi_1_comparison_text_color;
+      document.getElementById("kpi-1-1-title").style.color = config.kpi_1_comparison_text_color;
+      document.getElementById("kpi-1-2-title").style.color = config.kpi_1_comparison_text_color;
 
       if (config.kpi_1_comparisons_visible) {
-        if (kpi_1_comparison_column_1 != null) {
+        if (kpi_1_comparison_column_1 != 0) {
           document.getElementById("kpi-1-1-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_1.name]);
           document.getElementById("kpi-1-1-title").innerHTML = getLabel(kpi_1_comparison_column_1);
         } else {
           document.getElementById("kpi-1-1-value").innerHTML = "";
           document.getElementById("kpi-1-1-title").innerHTML = "";
         }
-        if (kpi_1_comparison_column_2 != null) {
+        if (kpi_1_comparison_column_2 != 0) {
           document.getElementById("kpi-1-2-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_2.name]);
           document.getElementById("kpi-1-2-title").innerHTML = getLabel(kpi_1_comparison_column_2);
         } else {
@@ -330,12 +332,12 @@ looker.plugins.visualizations.add({
 
       if (kpi_1_comparison_value_1>0) {
         colorizeKPImain(config.main_element_positive_color, config.kpi_1_comparison_color_mode)
-        if (config.kpi_comparison_icon_positive != null) {
+        if (config.kpi_comparison_icon_positive != "") {
           document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_1_comparison_icon_positive);
         }
       } else if (kpi_1_comparison_value_1<0) {
         colorizeKPImain(config.main_element_negative_color, config.kpi_1_comparison_color_mode)
-        if (config.kpi_comparison_icon_negative != null) {
+        if (config.kpi_comparison_icon_negative != "") {
           document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_1_comparison_icon_negative);
         }
       }
