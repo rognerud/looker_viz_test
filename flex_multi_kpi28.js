@@ -40,25 +40,17 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         default: "#000000"
       },
-      kpi_1_icon: {
+      kpi_1_positive_icon: {
         type: "string",
         label: "display icon for kpi 1",
         display: "string",
         section: "KPI1",
-      },      
+      },
       kpi_1_icon_color: {
         type: "string",
         label: "color of icon for kpi 1 if positive value",
         display: "color",
         section: "KPI1",
-      },
-      kpi_1_icon_only: {
-        type: "boolean",
-        label: "show icon only for kpi 1",
-        display: "boolean",
-        section: "KPI1",
-        default: false,
-        display_size: "half"
       },
       kpi_1_comparison_column_1: {
         type: "number",
@@ -79,19 +71,17 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         default: true,
       },
-      kpi_1_comparison_color_positive: {
+      kpi_comparison_icon_positive: {
         type: "string",
-        label: "color for positive comparison for kpi 1",
+        label: "replace icon for positive comparison",
         display: "color",
         section: "KPI1",
-        default: "#00A99D"
       },
-      kpi_comparison_color_negative: {
+      kpi_comparison_icon_negative: {
         type: "string",
-        label: "color for negative comparison for kpi 1",
+        label: "replace icon for negative comparison",
         display: "color",
         section: "KPI1",
-        default: "#E8743B"
       },
       kpi_1_comparison_color_mode: {
         type: "string",
@@ -108,18 +98,6 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         default: "comparison-icon"
       },
-      kpi_1_comparison_positive_icon: {
-        type: "string",
-        label: "show icon for kpi 1 comparison if positive value",
-        display: "string",
-        section: "KPI1",
-      },
-      kpi_1_comparison_negative_icon: {
-        type: "string",
-        label: "show icon for kpi 1 comparison if negative value",
-        display: "string",
-        section: "KPI1",
-      },
       main_element_dividers_between_kpis: {
         type: "boolean",
         label: "show dividers between kpis",
@@ -134,49 +112,108 @@ looker.plugins.visualizations.add({
       // Insert a <style> tag with some styles we'll use later.
       element.innerHTML = `
       <style>
-        body{
-        }
-        .order-card {
-        }
-        
-        .kpi-1-card {
-        }
-        
         .card {
+          margin: 0px 0px 0rem;
+          padding: 0px;
+          font-family: "Google Sans", "Noto Sans", "Noto Sans JP", "Noto Sans CJK KR", "Noto Sans Arabic UI", "Noto Sans Devanagari UI", "Noto Sans Hebrew", "Noto Sans Thai UI", Helvetica, Arial, sans-serif;
+          box-sizing: border-box;
+          display: block;
+          font-size: 1.17em;
+          margin-block-start: 1em;
+          margin-block-end: 1em;
+          margin-inline-start: 0px;
+          margin-inline-end: 0px;
         }
-        
-        .card .card-block {
-            padding: 1rem;
-        }
-        
-        .order-card i {
-            font-size: 2rem;
-        }
-        
-        .f-left {
-            float: left;
-        }
-        
-        .f-right {
-            float: right;
-        }
-      </style>
 
-      <div class="container">
-      <div class="row">
-          <div class="col-md-4 col-xl-3" id="kpi-1">
-              <div class="card kpi-1-card order-card">
-                  <div class="card-block">
-                      <div class="kpi-icon id="kpi-1-icon-solo><span class="main-icon" id="kpi-1-center-1-icon"></span></div>
-                      <div class="kpi-main-and-icon" id="kpi-1-value-and-icon"><span class="kpi-side-icon" id="kpi-1-side-1-icon"></span><span id="kpi-1-value">486</span></div>
-                      <div class="kpi-title" id="kpi-1-title">Orders Received</div>
-                      <div class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-1-icon"></span><span class="f-right" id="kpi-1-comparison-1-value">351</span></div>
-                      <div class="kpi-comparison" id="kpi-1-comparison-2-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-2-icon"></span><span class="f-right" id="kpi-1-comparison-2-value">351</span></div>
-                  </div>
+        .card-block {
+          -webkit-box-align: center;
+          align-items: center;
+          flex-direction: column;
+          height: 100%;
+          -webkit-box-pack: center;
+          justify-content: center;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          max-height: 100%;
+        }
+
+        .card-main {
+          width: 100%;
+          display: flex;
+          justify-content: stretch;
+          flex-direction: column;
+          padding: 0px 12px;
+        }
+
+        .card-comparison {
+          max-width: 100%;
+          flex: 1 1 0%;
+          display: flex;
+          -webkit-box-align: stretch;
+          align-items: stretch;
+          -webkit-box-pack: end;
+          justify-content: flex-end;
+          overflow-y: auto;
+          flex-direction: column;
+          margin-bottom: 0.75rem;
+        }
+
+        .kpi-value {
+          font-size: 2.25rem;
+          letter-spacing: -1px;
+          text-align: center;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-weight: 400;
+          line-height: 1.5em;
+        }
+        .kpi-title {
+          font-size: 0.875rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          line-height: 1.25rem;
+        }
+        .kpi-comparison {
+          font-family: inherit;
+          margin: 0px;
+          padding: 0px 0.75rem;
+          min-width: 1px;
+          width: 100%;
+          display: flex;
+          height: 36px;
+          position: absolute;
+          bottom: 0px;
+          left: 0px;
+          flex: 1 1 0%;
+          -webkit-box-align: center;
+          align-items: center;
+          -webkit-box-pack: center;
+          justify-content: center;
+        }
+
+      </style>
+      <div class="card">
+      <div class="card-block">
+        <div class="card-main">
+          <div class="kpi-icon id="kpi-1-icon></div>
+          <div class="kpi-value" id="kpi-1-value">100 000</div>
+          <div class="kpi-title" id="kpi-1-title">users</div>
+        </div>
+        <div class="card-comparison">
+          <div style="width: 100%; height: 36px;">
+            <div class="kpi-comparison">
+              <span class="kpi-comparison-value" id="kpi-1-1-value">5%</span>
+              <span class="kpi-comparison-title" id="kpi-1-1-title">ly</span>
               </div>
           </div>
+        </div>
       </div>
       </div>
+
       `;
         // Create a container element to let us center the text.
       var container = element.appendChild(document.createElement("div"));
