@@ -143,7 +143,6 @@ looker.plugins.visualizations.add({
         }
         
         .kpi-1-card {
-            background: linear-gradient(45deg,#2ed8b6,#59e0c5);
         }
         
         .card {
@@ -179,10 +178,10 @@ looker.plugins.visualizations.add({
               <div class="card kpi-1-card order-card">
                   <div class="card-block">
                       <h4 class="kpi-title" id="kpi-1-title">Orders Received</h6>
-                      <h2 class="text-right id="kpi-1-icon-solo></h2>
-                      <h2 class="kpi-main-and-icon" id="kpi-1-value-and-icon"><span>486</span></h2>
+                      <h2 class="kpi-icon id="kpi-1-icon-solo><span class="main-icon" id="kpi-1-center-1-icon"></span></h2>
+                      <h2 class="kpi-main-and-icon" id="kpi-1-value-and-icon"><span class="kpi-side-icon" id="kpi-1-side-1-icon"></span><span id="kpi-1-value>486</span></h2>
                       <h6 class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-1-icon"></span><span class="f-right" id="kpi-1-comparison-1-value">351</span></p>
-                      <h6 class="kpi-comparison" id="kpi-1-comparison-1-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-2-icon"></span><span class="f-right" id="kpi-1-comparison-2-value">351</span></p>
+                      <h6 class="kpi-comparison" id="kpi-1-comparison-2-title">Completed Orders<span class="comparison-icon" id="kpi-1-comparison-2-icon"></span><span class="f-right" id="kpi-1-comparison-2-value">351</span></p>
                     <div class="kpi>
                   </div>
               </div>
@@ -209,13 +208,6 @@ looker.plugins.visualizations.add({
       
       if (config.kpi_1_positive_icon != null) {
         var kpi1_positive_icon = config.kpi_1_positive_icon;
-      } else {
-        var kpi1_positive_icon = "chevron-up";
-      }
-      if (config.kpi_1_negative_icon != null) {
-        var kpi1_negative_icon = config.kpi_1_negative_icon;
-      } else {
-        var kpi1_negative_icon = "chevron-down";
       }
 
       var kpi1_value = firstRow[kpi1.name].value;
