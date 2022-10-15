@@ -209,6 +209,14 @@ looker.plugins.visualizations.add({
         }
       }
 
+      function getLabel(column) {
+        if (column.hasOwnProperty('label_short')) {
+          return column.label_short;
+        } else {
+          return column.label;
+        }
+      }
+
       function adjustSizeKPI(size, kpi) {
         if (size == "small") {
           document.getElementById(kpi+"-value").style.fontSize = "2rem";
@@ -251,6 +259,7 @@ looker.plugins.visualizations.add({
 
       function hideEverythingButIcon() {
         document.getElementById("kpi-1-value").style.display = "none";
+        document.getElementById("kpi-1-title").style.display = "none";
         document.getElementById("kpi-1-1-value").style.display = "none";
         document.getElementById("kpi-1-1-title").style.display = "none";
         document.getElementById("kpi-1-2-value").style.display = "none";
@@ -258,6 +267,7 @@ looker.plugins.visualizations.add({
       }
       function unhideEverythingButIcon() {
         document.getElementById("kpi-1-value").style.display = "block";
+        document.getElementById("kpi-1-title").style.display = "block";
         document.getElementById("kpi-1-1-value").style.display = "block";
         document.getElementById("kpi-1-1-title").style.display = "block";
         document.getElementById("kpi-1-2-value").style.display = "block";
@@ -283,7 +293,7 @@ looker.plugins.visualizations.add({
       if (config.kpi_1_title != "") {
         document.getElementById("kpi-1-title").innerHTML = config.kpi_1_title;
       } else {
-        document.getElementById("kpi-1-title").innerHTML = kpi_1_column.label_short;
+        document.getElementById("kpi-1-title").innerHTML = getLabel(kpi_1_column);
       }
       
       document.getElementById("kpi-1-title").style.color = config.kpi_1_title_color;
@@ -294,14 +304,14 @@ looker.plugins.visualizations.add({
       if (config.kpi_1_comparisons_visible) {
         if (kpi_1_comparison_column_1 != null) {
           document.getElementById("kpi-1-1-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_1.name]);
-          document.getElementById("kpi-1-1-title").innerHTML = kpi_1_comparison_column_1.label_short;;
+          document.getElementById("kpi-1-1-title").innerHTML = getLabel(kpi_1_comparison_column_1);
         } else {
           document.getElementById("kpi-1-1-value").innerHTML = "";
           document.getElementById("kpi-1-1-title").innerHTML = "";
         }
         if (kpi_1_comparison_column_2 != null) {
           document.getElementById("kpi-1-2-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_2.name]);
-          document.getElementById("kpi-1-2-title").innerHTML = kpi_1_comparison_column_2.label_short;;
+          document.getElementById("kpi-1-2-title").innerHTML = getLabel(kpi_1_comparison_column_2);
         } else {
           document.getElementById("kpi-1-2-value").innerHTML = "";
           document.getElementById("kpi-1-2-title").innerHTML = "";
