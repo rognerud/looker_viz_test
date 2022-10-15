@@ -321,12 +321,12 @@ looker.plugins.visualizations.add({
       if (kpi_1_comparison_value_1>0) {
         colorizeKPImain(config.main_element_positive_color, config.kpi_1_comparison_color_mode)
         if (config.kpi_comparison_icon_positive != null) {
-          document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_comparison_icon_positive);
+          document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_1_comparison_icon_positive);
         }
       } else if (kpi_1_comparison_value_1<0) {
         colorizeKPImain(config.main_element_negative_color, config.kpi_1_comparison_color_mode)
         if (config.kpi_comparison_icon_negative != null) {
-          document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_comparison_icon_negative);
+          document.getElementById("kpi-1-icon").setAttribute("name", config.kpi_1_comparison_icon_negative);
         }
       }
 
