@@ -176,6 +176,7 @@ looker.plugins.visualizations.add({
           text-overflow: ellipsis;
           white-space: nowrap;
           line-height: 1.25rem;
+          text-align: centre
         }
         .kpi-comparison {
           font-family: inherit;
