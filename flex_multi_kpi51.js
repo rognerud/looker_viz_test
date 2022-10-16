@@ -180,10 +180,12 @@ looker.plugins.visualizations.add({
         margin: 0 auto;
         font-size: 5vh;
       }
-      
+      .card-comparison-value {
+        padding-left: 0;
+      }      
       .card-comparison-sign {
-        float: right;
-        line-height: 1.5;
+        align-text: right;
+        padding-right: 0;
       }
       </style>
 
@@ -238,23 +240,17 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-value").style.fontSize = "10vh";
           document.getElementById(kpi+"-title").style.fontSize = "6vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = "4vh";
-          document.getElementById(kpi+"-1-sign").style.fontSize = "7vh";
-          document.getElementById(kpi+"-2-sign").style.fontSize = "7vh";
         } else if (size == "medium") {
           document.getElementById(kpi+"-icon").setAttribute("size", "25vh");
           document.getElementById(kpi+"-value").style.fontSize = "20vh";
           document.getElementById(kpi+"-title").style.fontSize = "10vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
-          document.getElementById(kpi+"-1-sign").style.fontSize = "8vh";
-          document.getElementById(kpi+"-2-sign").style.fontSize = "8vh";
         }
         else if (size == "large") {
           document.getElementById(kpi + "-icon").setAttribute("size", "35vh");
           document.getElementById(kpi+"-value").style.fontSize = "25vh";
           document.getElementById(kpi+"-title").style.fontSize = "14vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
-          document.getElementById(kpi+"-1-sign").style.fontSize = "8vh";
-          document.getElementById(kpi+"-2-sign").style.fontSize = "8vh"; 
         }
       }
 
@@ -292,18 +288,12 @@ looker.plugins.visualizations.add({
       function hideEverythingButIcon(kpi) {
         document.getElementById(kpi + "-value").style.display = "none";
         document.getElementById(kpi + "-title").style.display = "none";
-        document.getElementById(kpi + "-1-value").style.display = "none";
-        document.getElementById(kpi + "-1-title").style.display = "none";
-        document.getElementById(kpi + "-2-value").style.display = "none";
-        document.getElementById(kpi + "-2-title").style.display = "none";
+        document.getElementById(kpi + "-1-comparisons").style.display = "none";
       }
       function unhideEverythingButIcon(kpi) {
         document.getElementById(kpi + "-value").style.display = "block";
         document.getElementById(kpi + "-title").style.display = "block";
-        document.getElementById(kpi + "-1-value").style.display = "inline";
-        document.getElementById(kpi + "-1-title").style.display = "inline";
-        document.getElementById(kpi + "-2-value").style.display = "inline";
-        document.getElementById(kpi + "-2-title").style.display = "inline";
+        document.getElementById(kpi + "-1-comparisons").style.display = "block";
       }
 
       console.log(queryResponse);
@@ -341,12 +331,15 @@ looker.plugins.visualizations.add({
       document.getElementById(kpi + "-2-title").style.color = config.kpi_1_comparison_text_color;
 
       if (config.kpi_1_comparisons_visible) {
+        document.getElementById(kpi + "-1-comparisons").style.display = "block";
         if (config.kpi_1_comparison_column_1 != undefined) {
           document.getElementById(kpi + "-1-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_1.name]);
           document.getElementById(kpi + "-1-title").innerHTML = getLabel(kpi_1_comparison_column_1);
         } else {
           document.getElementById(kpi + "-1-value").innerHTML = "";
           document.getElementById(kpi + "-1-title").innerHTML = "";
+          document.getElementById(kpi + "-1-sign").innerHTML = "";
+
         }
         if (config.kpi_1_comparison_column_2 != undefined) {
           document.getElementById(kpi + "-2-value").innerHTML = getRenderedValue(firstRow[kpi_1_comparison_column_2.name]);
@@ -354,12 +347,11 @@ looker.plugins.visualizations.add({
         } else {
           document.getElementById(kpi + "-2-value").innerHTML = "";
           document.getElementById(kpi + "-2-title").innerHTML = "";
+          document.getElementById(kpi + "-2-sign").innerHTML = "";
+
         }
       } else {
-        document.getElementById(kpi + "-1-value").innerHTML = "";
-        document.getElementById(kpi + "-1-title").innerHTML = "";
-        document.getElementById(kpi + "-2-value").innerHTML = "";
-        document.getElementById(kpi + "-2-title").innerHTML = "";
+        document.getElementById(kpi + "-1-comparisons").style.display = "none";
       }
 
       adjustSizeKPI(config.kpi_1_size, "kpi-1");
@@ -374,8 +366,8 @@ looker.plugins.visualizations.add({
             config.main_element_positive_color,
             config.kpi_1_comparison_color_mode,
             kpi)
-          if (config.kpi_comparison_icon_positive.length > 0
-              && config.kpi_comparison_icon_negative.length > 0) {
+          if (config.kpi_1_comparison_icon_positive.length > 0
+              && config.kpi_1_comparison_icon_negative.length > 0) {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_positive);
           } else {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_icon);
@@ -387,8 +379,8 @@ looker.plugins.visualizations.add({
             config.main_element_negative_color,
             config.kpi_1_comparison_color_mode,
             kpi)
-          if (config.kpi_comparison_icon_positive.length > 0
-              && config.kpi_comparison_icon_negative.length > 0) {
+          if (config.kpi_1_comparison_icon_positive.length > 0
+              && config.kpi_1_comparison_icon_negative.length > 0) {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_negative);
           } else {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_icon);
