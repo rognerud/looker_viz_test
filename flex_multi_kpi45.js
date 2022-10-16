@@ -188,10 +188,10 @@ looker.plugins.visualizations.add({
         <div class="card-value" id="kpi-1-value">50%</div>
         <div class="card-title" id="kpi-1-title">title</div>
         <div class="card-comparison" id="kpi-1-comparisons">
-          <span class="card-comparison-sign" id="kpi-1-comparison-1-sign"></span>
+          <span class="card-comparison-sign" id="kpi-1-1-sign"></span>
           <span class="card-comparison-value" id="kpi-1-1-value">15 pp</span>
           <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span>
-          <span class="card-comparison-sign" id="kpi-1-comparison-2-sign"></span>
+          <span class="card-comparison-sign" id="kpi-1-2-sign"></span>
           <span class="card-comparison-value" id="kpi-1-2-value">10 pp</span>
           <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>   
         </div>
@@ -228,20 +228,20 @@ looker.plugins.visualizations.add({
       function adjustSizeKPI(size, kpi) {
         if (size == "small") {
           document.getElementById(kpi + "-icon").setAttribute("size", "15vh");
-          document.getElementById(kpi+"-value").style.fontSize = "10vh";
+          document.getElementById(kpi+"-value").style.fontSize = "12vh";
           document.getElementById(kpi+"-title").style.fontSize = "8vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "6vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
         } else if (size == "medium") {
           document.getElementById(kpi + "-icon").setAttribute("size", "25vh");
           document.getElementById(kpi+"-value").style.fontSize = "20vh";
           document.getElementById(kpi+"-title").style.fontSize = "12vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "10vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
         }
         else if (size == "large") {
           document.getElementById(kpi + "-icon").setAttribute("size", "32vh");
           document.getElementById(kpi+"-value").style.fontSize = "25vh";
           document.getElementById(kpi+"-title").style.fontSize = "16vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "14vh";        }
+          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";        }
       }
 
       function colorizeKPImain(color, option, kpi) {
@@ -282,8 +282,8 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi + "-2-title").style.display = "none";
       }
       function unhideEverythingButIcon(kpi) {
-        document.getElementById(kpi + "-value").style.display = "inline-block";
-        document.getElementById(kpi + "-title").style.display = "inline-block";
+        document.getElementById(kpi + "-value").style.display = "block";
+        document.getElementById(kpi + "-title").style.display = "block";
         document.getElementById(kpi + "-1-value").style.display = "inline";
         document.getElementById(kpi + "-1-title").style.display = "inline";
         document.getElementById(kpi + "-2-value").style.display = "inline";
@@ -301,7 +301,7 @@ looker.plugins.visualizations.add({
       var kpi_1_comparison_column_1 = all_columns.at(config.kpi_1_comparison_column_1);
       var kpi_1_comparison_column_2 = all_columns.at(config.kpi_1_comparison_column_2);
 
-      if (config.kpi_1_icon != ""||config.kpi_1_comparison_icon_negative != "" && config.kpi_1_comparison_icon_positive != "") {
+      if (config.kpi_1_icon != "") {
         document.getElementById(kpi + "-icon").style.display = "inline-block";
       } else {
         document.getElementById(kpi + "-icon").style.display = "none";
@@ -348,6 +348,7 @@ looker.plugins.visualizations.add({
 
       adjustSizeKPI(config.kpi_1_size, "kpi-1");
 
+      document.getElementById(kpi + "-1-sign").innerHTML = "";
       if (config.kpi_1_comparison_column_1 != undefined) {
 
         var kpi_1_comparison_value_1 = firstRow[kpi_1_comparison_column_1.name].value;
@@ -357,7 +358,8 @@ looker.plugins.visualizations.add({
             config.main_element_positive_color,
             config.kpi_1_comparison_color_mode,
             kpi)
-          if (config.kpi_comparison_icon_positive != "") {
+          if (config.kpi_comparison_icon_positive != ""
+            && config.kpi_1_comparison_icon_positive != undefined) {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_positive);
           }
           document.getElementById(kpi + "-1-sign").innerHTML = "▴";
@@ -367,16 +369,15 @@ looker.plugins.visualizations.add({
             config.main_element_negative_color,
             config.kpi_1_comparison_color_mode,
             kpi)
-          if (config.kpi_comparison_icon_negative != "") {
+          if (config.kpi_comparison_icon_negative != "" &&
+            config.kpi_1_comparison_icon_negative != undefined) {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_negative);
           }
           document.getElementById(kpi + "-1-sign").innerHTML = "▾";
-          
         }
-        document.getElementById(kpi + "-1-sign").innerHTML = "";
-
       }
-
+      
+      document.getElementById(kpi + "-2-sign").innerHTML = "";
       if (config.kpi_1_comparison_column_2 != undefined) {
 
         var kpi_1_comparison_value_2 = firstRow[kpi_1_comparison_column_2.name].value;
@@ -393,8 +394,6 @@ looker.plugins.visualizations.add({
             config.kpi_1_comparison_color_mode,
             kpi)
             document.getElementById(kpi + "-2-sign").innerHTML = "▾";
-        } else {
-          document.getElementById(kpi + "-2-sign").innerHTML = "";
         }
     }
 
