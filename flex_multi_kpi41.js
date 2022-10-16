@@ -32,6 +32,7 @@ looker.plugins.visualizations.add({
         label: "title, if empty, uses label",
         display: "text",
         section: "KPI1",
+        default: ""
       },
       kpi_1_title_color: {
         type: "string",
@@ -45,6 +46,7 @@ looker.plugins.visualizations.add({
         label: "display icon for kpi 1",
         display: "text",
         section: "KPI1",
+        default: ""
       },
       kpi_1_icon_color: {
         type: "string",
@@ -76,12 +78,14 @@ looker.plugins.visualizations.add({
         label: "replace icon for positive comparison",
         display: "text",
         section: "KPI1",
+        default: ""
       },
       kpi_1_comparison_icon_negative: {
         type: "string",
         label: "replace icon for negative comparison",
         display: "text",
         section: "KPI1",
+        default: ""
       },
       kpi_1_comparison_color_mode: {
         type: "string",
@@ -184,8 +188,10 @@ looker.plugins.visualizations.add({
         <div class="card-value" id="kpi-1-value">50%</div>
         <div class="card-title" id="kpi-1-title">title</div>
         <div class="card-comparison" id="kpi-1-comparisons">
+          <span class="card-comparison-sign" id="kpi-1-comparison-1-sign"></span>
           <span class="card-comparison-value" id="kpi-1-1-value">15 pp</span>
-          <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span>    
+          <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span>
+          <span class="card-comparison-sign" id="kpi-1-comparison-2-sign"></span>
           <span class="card-comparison-value" id="kpi-1-2-value">10 pp</span>
           <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>   
         </div>
@@ -268,12 +274,12 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi + "-2-title").style.display = "none";
       }
       function unhideEverythingButIcon(kpi) {
-        document.getElementById(kpi + "-value").style.display = "block";
-        document.getElementById(kpi + "-title").style.display = "block";
-        document.getElementById(kpi + "-1-value").style.display = "block";
-        document.getElementById(kpi + "-1-title").style.display = "block";
-        document.getElementById(kpi + "-2-value").style.display = "block";
-        document.getElementById(kpi + "-2-title").style.display = "block";
+        document.getElementById(kpi + "-value").style.display = "inline-block";
+        document.getElementById(kpi + "-title").style.display = "inline-block";
+        document.getElementById(kpi + "-1-value").style.display = "inline";
+        document.getElementById(kpi + "-1-title").style.display = "inline";
+        document.getElementById(kpi + "-2-value").style.display = "inline";
+        document.getElementById(kpi + "-2-title").style.display = "inline";
       }
 
       console.log(queryResponse);
@@ -287,17 +293,17 @@ looker.plugins.visualizations.add({
       var kpi_1_comparison_column_1 = all_columns.at(config.kpi_1_comparison_column_1);
       var kpi_1_comparison_column_2 = all_columns.at(config.kpi_1_comparison_column_2);
 
-      if (config.kpi_1_icon != "") {
-        document.getElementById(kpi + "-icon").style.display = "none";
+      if (config.kpi_1_icon != ""||config.kpi_1_comparison_icon_negative != "" && config.kpi_1_comparison_icon_positive != "") {
+        document.getElementById(kpi + "-icon").style.display = "inline-block";
       } else {
-        document.getElementById(kpi + "-icon").style.display = "block";
+        document.getElementById(kpi + "-icon").style.display = "none";
       }
 
       document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_icon);
       document.getElementById(kpi + "-icon").setAttribute("color", config.kpi_1_icon_color);
       document.getElementById(kpi + "-value").innerHTML = getRenderedValue(firstRow[kpi_1_column.name]);
 
-      if (config.kpi_1_title != undefined) {
+      if (config.kpi_1_title != "") {
         document.getElementById(kpi + "-title").innerHTML = config.kpi_1_title;
       } else {
         document.getElementById(kpi + "-title").innerHTML = getLabel(kpi_1_column);
@@ -346,6 +352,8 @@ looker.plugins.visualizations.add({
           if (config.kpi_comparison_icon_positive != "") {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_positive);
           }
+          document.getElementById(kpi + "-1-sign").innerHTML = "▴";
+
         } else if (kpi_1_comparison_value_1<0) {
           colorizeKPImain(
             config.main_element_negative_color,
@@ -354,30 +362,38 @@ looker.plugins.visualizations.add({
           if (config.kpi_comparison_icon_negative != "") {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_negative);
           }
+          document.getElementById(kpi + "-1-sign").innerHTML = "▾";
+          
         }
+        document.getElementById(kpi + "-1-sign").innerHTML = "";
+
       }
 
       if (config.kpi_1_comparison_column_2 != undefined) {
 
         var kpi_1_comparison_value_2 = firstRow[kpi_1_comparison_column_2.name].value;
-
+        console.log("value 2" + kpi_1_comparison_value_2);
         if (kpi_1_comparison_value_2>0) {
           colorizeKPIsecondary(
-            config.comparison_element_positive_color,
+            config.main_element_positive_color,
             config.kpi_1_comparison_color_mode,
             kpi)
+            document.getElementById(kpi + "-2-sign").innerHTML = "▴";
         } else if (kpi_1_comparison_value_2<0) {
           colorizeKPIsecondary(
-            config.comparison_element_negative_color,
+            config.main_element_negative_color,
             config.kpi_1_comparison_color_mode,
             kpi)
+            document.getElementById(kpi + "-2-sign").innerHTML = "▾";
+        } else {
+          document.getElementById(kpi + "-2-sign").innerHTML = "";
         }
     }
 
     if (config.kpi_1_only_show_icon) {
-      hideEverythingButIcon();
+      hideEverythingButIcon(kpi);
     } else {
-      unhideEverythingButIcon();
+      unhideEverythingButIcon(kpi);
     }
 
       done()
