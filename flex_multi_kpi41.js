@@ -227,13 +227,21 @@ looker.plugins.visualizations.add({
 
       function adjustSizeKPI(size, kpi) {
         if (size == "small") {
+          document.getElementById(kpi + "-icon").setAttribute("size", "15vh");
           document.getElementById(kpi+"-value").style.fontSize = "10vh";
+          document.getElementById(kpi+"-title").style.fontSize = "8vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "6vh";
         } else if (size == "medium") {
-          document.getElementById(kpi+"-value").style.fontSize = "15vh";
+          document.getElementById(kpi + "-icon").setAttribute("size", "25vh");
+          document.getElementById(kpi+"-value").style.fontSize = "20vh";
+          document.getElementById(kpi+"-title").style.fontSize = "12vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "10vh";
         }
         else if (size == "large") {
-          document.getElementById(kpi+"-value").style.fontSize = "20vh";
-        }
+          document.getElementById(kpi + "-icon").setAttribute("size", "32vh");
+          document.getElementById(kpi+"-value").style.fontSize = "25vh";
+          document.getElementById(kpi+"-title").style.fontSize = "16vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "14vh";        }
       }
 
       function colorizeKPImain(color, option, kpi) {
@@ -392,6 +400,7 @@ looker.plugins.visualizations.add({
 
     if (config.kpi_1_only_show_icon) {
       hideEverythingButIcon(kpi);
+      document.getElementById(kpi + "-icon").setAttribute("size", "75vh");
     } else {
       unhideEverythingButIcon(kpi);
     }
