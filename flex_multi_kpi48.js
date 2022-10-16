@@ -6,7 +6,8 @@ looker.plugins.visualizations.add({
         label: "column number for kpi 1",
         display: "number",
         section: "KPI1",
-        default: 0
+        default: 0,
+        order: 1
       },
       kpi_1_size: {
         type: "string",
@@ -43,28 +44,30 @@ looker.plugins.visualizations.add({
       },
       kpi_1_icon: {
         type: "string",
-        label: "display icon for kpi 1",
+        label: "Insert a boxicon name to display an icon",
         display: "text",
         section: "KPI1",
         default: ""
       },
       kpi_1_icon_color: {
         type: "string",
-        label: "color of icon",
+        label: "color of icon if used",
         display: "color",
         section: "KPI1",
       },
       kpi_1_comparison_column_1: {
         type: "number",
-        label: "column number for kpi 1 comparison 1",
+        label: "column number for comparison 1",
         display: "number",
         section: "KPI1",
+        order: 22
       },
       kpi_1_comparison_column_2: {
         type: "number",
-        label: "column number for kpi 1 comparison 2",
+        label: "column number for comparison 2",
         display: "number",
         section: "KPI1",
+        order: 21
       },
       kpi_1_comparisons_visible: {
         type: "boolean",
@@ -72,6 +75,7 @@ looker.plugins.visualizations.add({
         display: "boolean",
         section: "KPI1",
         default: true,
+        order: 20
       },
       kpi_1_comparison_icon_positive: {
         type: "string",
@@ -93,7 +97,6 @@ looker.plugins.visualizations.add({
         display: "select",
         values: [
           {"Color comparison value": "comparison-value"},
-          {"Color comparison icon": "comparison-icon"},
           {"Color comparison": "comparison"},
           {"Color main value": "main-value"},
           {"Color main icon": "main-icon"},
@@ -177,7 +180,11 @@ looker.plugins.visualizations.add({
         margin: 0 auto;
         font-size: 5vh;
       }
-
+      
+      .card-comparison-sign {
+        float: right;
+        line-height: 1.5;
+      }
       </style>
 
       <div class="content-wrapper">
@@ -227,26 +234,34 @@ looker.plugins.visualizations.add({
 
       function adjustSizeKPI(size, kpi) {
         if (size == "small") {
-          document.getElementById(kpi + "-icon").setAttribute("size", "15vh");
-          document.getElementById(kpi+"-value").style.fontSize = "12vh";
-          document.getElementById(kpi+"-title").style.fontSize = "8vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
+          document.getElementById(kpi+"-icon").setAttribute("size", "15vh");
+          document.getElementById(kpi+"-value").style.fontSize = "10vh";
+          document.getElementById(kpi+"-title").style.fontSize = "6vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "4vh";
+          document.getElementById(kpi+"-1-sign").style.fontSize = "7vh";
+          document.getElementById(kpi+"-2-sign").style.fontSize = "7vh";
         } else if (size == "medium") {
-          document.getElementById(kpi + "-icon").setAttribute("size", "25vh");
+          document.getElementById(kpi+"-icon").setAttribute("size", "25vh");
           document.getElementById(kpi+"-value").style.fontSize = "20vh";
-          document.getElementById(kpi+"-title").style.fontSize = "12vh";
+          document.getElementById(kpi+"-title").style.fontSize = "10vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
+          document.getElementById(kpi+"-1-sign").style.fontSize = "8vh";
+          document.getElementById(kpi+"-2-sign").style.fontSize = "8vh";
         }
         else if (size == "large") {
-          document.getElementById(kpi + "-icon").setAttribute("size", "32vh");
+          document.getElementById(kpi + "-icon").setAttribute("size", "35vh");
           document.getElementById(kpi+"-value").style.fontSize = "25vh";
-          document.getElementById(kpi+"-title").style.fontSize = "16vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";        }
+          document.getElementById(kpi+"-title").style.fontSize = "14vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
+          document.getElementById(kpi+"-1-sign").style.fontSize = "8vh";
+          document.getElementById(kpi+"-2-sign").style.fontSize = "8vh"; 
+        }
       }
 
       function colorizeKPImain(color, option, kpi) {
         if (option == "comparison-value") {
           document.getElementById(kpi + "-1-value").style.color = color;
+          document.getElementById(kpi + "-1-sign").style.color = color;
         } else if (option == "comparison-icon") {
           document.getElementById(kpi + "-1-title").style.color = color;
         } else if (option == "comparison") {
@@ -265,6 +280,7 @@ looker.plugins.visualizations.add({
       function colorizeKPIsecondary(color, option, kpi) {
         if (option == "comparison-value") {
           document.getElementById(kpi + "-2-value").style.color = color;
+          document.getElementById(kpi + "-2-sign").style.color = color;
         } else if (option == "comparison-icon") {
           document.getElementById(kpi + "-2-title").style.color = color;
         } else if (option == "comparison") {
@@ -358,9 +374,11 @@ looker.plugins.visualizations.add({
             config.main_element_positive_color,
             config.kpi_1_comparison_color_mode,
             kpi)
-          if (config.kpi_comparison_icon_positive != ""
-            && config.kpi_1_comparison_icon_positive != undefined) {
+          if (config.kpi_comparison_icon_positive.length > 0
+              && config.kpi_comparison_icon_negative.length > 0) {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_positive);
+          } else {
+            document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_icon);
           }
           document.getElementById(kpi + "-1-sign").innerHTML = "▴";
 
@@ -369,9 +387,11 @@ looker.plugins.visualizations.add({
             config.main_element_negative_color,
             config.kpi_1_comparison_color_mode,
             kpi)
-          if (config.kpi_comparison_icon_negative != "" &&
-            config.kpi_1_comparison_icon_negative != undefined) {
+          if (config.kpi_comparison_icon_positive.length > 0
+              && config.kpi_comparison_icon_negative.length > 0) {
             document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_comparison_icon_negative);
+          } else {
+            document.getElementById(kpi + "-icon").setAttribute("name", config.kpi_1_icon);
           }
           document.getElementById(kpi + "-1-sign").innerHTML = "▾";
         }
