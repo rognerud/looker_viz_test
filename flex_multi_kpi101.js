@@ -3,8 +3,8 @@ const size_description = "size_description";
 const size_default = "large";
 const value_color_default = "black";
 const comparison_color_default = "#a5a6a1";
-const progress_foreground_color_default = "white";
-const progress_background_color_default = "#a5a6a1";
+const progress_foreground_color_default = "#CBC8CD";
+const progress_background_color_default = "#564C5C";
 const progress_foreground_description = "The color of the foreground in the progress bar";
 const progress_background_description = "The color of the background in the progress  bar";
 
@@ -64,7 +64,7 @@ looker.plugins.visualizations.add({
         default: progress_background_color_default,
         display: "color",
         section: "KPI1",
-        order: 51
+        order: 52
       },
       kpi_2_progress_bar_color_background: {
         type: "string",
@@ -72,7 +72,7 @@ looker.plugins.visualizations.add({
         default: progress_background_color_default,
         display: "color",
         section: "KPI2",
-        order: 51
+        order: 52
       },
       kpi_3_progress_bar_color_background: {
         type: "string",
@@ -80,7 +80,7 @@ looker.plugins.visualizations.add({
         default: progress_background_color_default,
         display: "color",
         section: "KPI3",
-        order: 51
+        order: 52
       },
       kpi_1_comparison_1_not_comparative: {
         type: "boolean",
@@ -1020,8 +1020,7 @@ looker.plugins.visualizations.add({
 
   let kpi_config = "kpi_1";
   let kpi = "kpi-1"
-  let column_value = config;
-
+    let column_value = config[kpi_config + "_value"];
     let comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
     let comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
     let comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
@@ -1056,6 +1055,7 @@ looker.plugins.visualizations.add({
 
     kpi_config = "kpi_2";
     kpi = "kpi-2"
+    column_value = config[kpi_config + "_value"];
     comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
     comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
     comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
@@ -1097,6 +1097,7 @@ looker.plugins.visualizations.add({
 
     kpi_config = "kpi_3";
     kpi = "kpi-3"
+    column_value = config[kpi_config + "_value"];
     comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
     comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
     comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
