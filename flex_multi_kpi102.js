@@ -1020,7 +1020,7 @@ looker.plugins.visualizations.add({
 
   let kpi_config = "kpi_1";
   let kpi = "kpi-1"
-    let column_value = config[kpi_config + "_value"];
+    let column_value = config[kpi_config + "_column"];
     let comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
     let comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
     let comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
@@ -1055,7 +1055,7 @@ looker.plugins.visualizations.add({
 
     kpi_config = "kpi_2";
     kpi = "kpi-2"
-    column_value = config[kpi_config + "_value"];
+    column_value = config[kpi_config + "_column"];
     comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
     comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
     comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
@@ -1097,7 +1097,7 @@ looker.plugins.visualizations.add({
 
     kpi_config = "kpi_3";
     kpi = "kpi-3"
-    column_value = config[kpi_config + "_value"];
+    column_value = config[kpi_config + "_column"];
     comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
     comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
     comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
