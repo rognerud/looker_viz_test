@@ -2,6 +2,7 @@ const column_description = "column_description";
 const size_description = "size_description";
 const size_default = "large";
 const value_color_default = "black";
+const comparison_color_default = "#a5a6a1";
 
 looker.plugins.visualizations.add({
 
@@ -50,7 +51,7 @@ looker.plugins.visualizations.add({
         section: "KPI3",
         order: 42
       },
-      kpi_1_comparison_not_comparative: {
+      kpi_1_comparison_1_not_comparative: {
         type: "boolean",
         label: "Comparison 1 should be a comparative",
         display: "radio",
@@ -58,7 +59,7 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         order: 43
       },
-      kpi_2_comparison_not_comparative: {
+      kpi_1_comparison_2_not_comparative: {
         type: "boolean",
         label: "Comparison 2 should be a comparative",
         display: "radio",
@@ -192,7 +193,7 @@ looker.plugins.visualizations.add({
         label: "color of comparison text",
         display: "color",
         section: "KPI1",
-        default: "#000000",
+        default: comparison_color_default,
         order: 14
       },
       kpi_2_column: {
@@ -320,7 +321,7 @@ looker.plugins.visualizations.add({
         label: "color of comparison text",
         display: "color",
         section: "KPI2",
-        default: "#000000",
+        default: comparison_color_default,
         order: 14
       },
       kpi_3_column: {
@@ -448,7 +449,7 @@ looker.plugins.visualizations.add({
         label: "color of comparison text",
         display: "color",
         section: "KPI3",
-        default: "#000000",
+        default: comparison_color_default,
         order: 14
       },
       main_element_dividers_between_kpis: {
@@ -463,14 +464,14 @@ looker.plugins.visualizations.add({
         label: "color for negative values",
         display: "color",
         section: "Main",
-        default: "#ff0000"
+        default: "green"
       },
       main_element_positive_color: {
         type: "string",
         label: "color for positive values",
         display: "color",
         section: "Main",
-        default: "#00ff00"
+        default: "red"
       }
     },
   
@@ -518,7 +519,8 @@ looker.plugins.visualizations.add({
         background-color: #000000;
         height: 35vh;
         width: 1px;
-        display: block;
+        display: inline-block;
+        float:left;
       }
 
       </style>
@@ -537,7 +539,7 @@ looker.plugins.visualizations.add({
           <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>   
         </div>
       </div>
-      <div class="card-divider" id="kpi-divider-1"></div>
+      <div class="card-divider" id="kpi-1-divider"></div>
       <div class="card" id="kpi-2">
         <div class="card-icon">
           <box-icon id="kpi-2-icon" type="solid" size="15vh" color="#eb4034" name=""></box-icon>
@@ -551,7 +553,7 @@ looker.plugins.visualizations.add({
           <span class="card-comparison-title" id="kpi-2-2-title"></span>   
         </div>
       </div>
-      <div class="card-divider" id="kpi-divider-1"></div>
+      <div class="card-divider" id="kpi-2-divider"></div>
       <div class="card" id="kpi-3">
       <div class="card-icon">
         <box-icon id="kpi-3-icon" type="solid" size="15vh" color="#eb4034" name=""></box-icon>
@@ -677,28 +679,11 @@ looker.plugins.visualizations.add({
       var all_columns = [];
       all_columns = all_columns.concat(queryResponse.fields.dimension_like).concat(queryResponse.fields.measure_like);
 
-      function applyKPIsettings(
-        kpi,
-        column_value,
-        comparison_color_mode,
-        comparison_column_1_value,
-        comparison_column_2_value,
-        comparison_icon_negative,
-        comparison_icon_positive,
-        comparison_text_color,
-        comparisons_visible,
-        icon,
-        icon_color,
-        only_show_icon,
-        size,
-        title,
-        title_color,
-        value_color,
-      ) {
+      function applyKPIsettings() {
 
-        var column = all_columns.at(column_value+1);
-        var comparison_column_1 = all_columns.at(comparison_column_1_value+1);
-        var comparison_column_2 = all_columns.at(comparison_column_2_value+1);
+        var column = all_columns.at(column_value-1);
+        var comparison_column_1 = all_columns.at(comparison_column_1_value-1);
+        var comparison_column_2 = all_columns.at(comparison_column_2_value-1);
   
         if (comparison_column_1_value == undefined) {
           hideUnusedComparison(kpi, "1");
@@ -763,7 +748,7 @@ looker.plugins.visualizations.add({
           adjustSizeKPI(size, kpi);
           
           document.getElementById(kpi + "-1-sign").innerHTML = "";
-          if (comparison_column_1 != undefined) {
+          if (comparison_1_comparative) {
           
             var comparison_value_1 = firstRow[comparison_column_1.name].value;
           
@@ -796,7 +781,7 @@ looker.plugins.visualizations.add({
           }
           
           document.getElementById(kpi + "-2-sign").innerHTML = "";
-          if (comparison_column_2 != undefined) {
+          if (comparison_2_comparative) {
           
             var comparison_value_2 = firstRow[comparison_column_2.name].value;
             console.log("value 2" + comparison_value_2);
@@ -824,134 +809,98 @@ looker.plugins.visualizations.add({
 
   }
 
+
   let active_kpi = 0;
 
   let kpi = "kpi-1"
-  let column_value = config.kpi_1_column;
-  let comparison_color_mode = config.kpi_1_comparison_color_mode;
-  let comparison_column_1_value = config.kpi_1_comparison_column_1;
-  let comparison_column_2_value = config.kpi_1_comparison_column_2;
-  let comparison_icon_negative = config.kpi_1_comparison_icon_negative;
-  let comparison_icon_positive = config.kpi_1_comparison_icon_positive;
-  let comparison_text_color = config.kpi_1_comparison_text_color;
-  let comparisons_visible = config.kpi_1_comparisons_visible;
-  let icon = config.kpi_1_icon;
-  let icon_color = config.kpi_1_icon_color;
-  let only_show_icon = config.kpi_1_only_show_icon;
-  let size = config.kpi_1_size;
-  let title = config.kpi_1_title;
-  let title_color = config.kpi_1_title_color;
-  let value_color = config.kpi_1_value_color;
+    let column_value = config.kpi_1_column;
+    let comparison_color_mode = config.kpi_1_comparison_color_mode;
+    let comparison_column_1_value = config.kpi_1_comparison_column_1;
+    let comparison_column_2_value = config.kpi_1_comparison_column_2;
+    let comparison_icon_negative = config.kpi_1_comparison_icon_negative;
+    let comparison_icon_positive = config.kpi_1_comparison_icon_positive;
+    let comparison_text_color = config.kpi_1_comparison_text_color;
+    let comparisons_visible = config.kpi_1_comparisons_visible;
+    let icon = config.kpi_1_icon;
+    let icon_color = config.kpi_1_icon_color;
+    let only_show_icon = config.kpi_1_only_show_icon;
+    let size = config.kpi_1_size;
+    let title = config.kpi_1_title;
+    let title_color = config.kpi_1_title_color;
+    let value_color = config.kpi_1_value_color;
+    let comparison_1_comparative = config.kpi_1_comparison_1_not_comparative
+    let comparison_2_comparative = config.kpi_1_comparison_2_not_comparative
 
   if (column_value!=undefined) {
+    if (config.main_element_dividers_between_kpis == true) {
+      document.getElementById(kpi + "-divider").style.display = "block";
+    } else {
+      document.getElementById(kpi + "-divider").style.display = "none";
+    }
     document.getElementById(kpi).style.display = "block ";
 
     active_kpi++;
-    applyKPIsettings(
-      kpi,
-      column_value,
-      comparison_color_mode,
-      comparison_column_1_value,
-      comparison_column_2_value,
-      comparison_icon_negative,
-      comparison_icon_positive,
-      comparison_text_color,
-      comparisons_visible,
-      icon,
-      icon_color,
-      only_show_icon,
-      size,
-      title,
-      title_color,
-      value_color,
-    )
+    applyKPIsettings()
   } else {
+    document.getElementById(kpi + "-divider").style.display = "none";
     document.getElementById(kpi).style.display = "none";
   }
 
   
   kpi = "kpi-2"
-  column_value = config.kpi_2_column;
-  comparison_color_mode = config.kpi_2_comparison_color_mode;
-  comparison_column_1_value = config.kpi_2_comparison_column_1;
-  comparison_column_2_value = config.kpi_2_comparison_column_2;
-  comparison_icon_negative = config.kpi_2_comparison_icon_negative;
-  comparison_icon_positive = config.kpi_2_comparison_icon_positive;
-  comparison_text_color = config.kpi_2_comparison_text_color;
-  comparisons_visible = config.kpi_2_comparisons_visible;
-  icon = config.kpi_2_icon;
-  icon_color = config.kpi_2_icon_color;
-  only_show_icon = config.kpi_2_only_show_icon;
-  size = config.kpi_2_size;
-  title = config.kpi_2_title;
-  title_color = config.kpi_2_title_color;
-  value_color = config.kpi_2_value_color;
+    column_value = config.kpi_2_column;
+    comparison_color_mode = config.kpi_2_comparison_color_mode;
+    comparison_column_1_value = config.kpi_2_comparison_column_1;
+    comparison_column_2_value = config.kpi_2_comparison_column_2;
+    comparison_icon_negative = config.kpi_2_comparison_icon_negative;
+    comparison_icon_positive = config.kpi_2_comparison_icon_positive;
+    comparison_text_color = config.kpi_2_comparison_text_color;
+    comparisons_visible = config.kpi_2_comparisons_visible;
+    icon = config.kpi_2_icon;
+    icon_color = config.kpi_2_icon_color;
+    only_show_icon = config.kpi_2_only_show_icon;
+    size = config.kpi_2_size;
+    title = config.kpi_2_title;
+    title_color = config.kpi_2_title_color;
+    value_color = config.kpi_2_value_color;
 
     if (column_value!=undefined) {
       document.getElementById(kpi).style.display = "block ";
+      if (config.main_element_dividers_between_kpis == true) {
+        document.getElementById(kpi + "-divider").style.display = "block";
+      } else {
+        document.getElementById(kpi + "-divider").style.display = "none";
+      }
 
       active_kpi++;
-      applyKPIsettings(
-        kpi,
-        column_value,
-        comparison_color_mode,
-        comparison_column_1_value,
-        comparison_column_2_value,
-        comparison_icon_negative,
-        comparison_icon_positive,
-        comparison_text_color,
-        comparisons_visible,
-        icon,
-        icon_color,
-        only_show_icon,
-        size,
-        title,
-        title_color,
-        value_color,
-      )
+      applyKPIsettings()
     } else {
       document.getElementById(kpi).style.display = "none";
+      document.getElementById(kpi + "-divider").style.display = "none";
+
     }
 
     kpi = "kpi-3"
-  column_value = config.kpi_3_column;
-  comparison_color_mode = config.kpi_3_comparison_color_mode;
-  comparison_column_1_value = config.kpi_3_comparison_column_1;
-  comparison_column_2_value = config.kpi_3_comparison_column_2;
-  comparison_icon_negative = config.kpi_3_comparison_icon_negative;
-  comparison_icon_positive = config.kpi_3_comparison_icon_positive;
-  comparison_text_color = config.kpi_3_comparison_text_color;
-  comparisons_visible = config.kpi_3_comparisons_visible;
-  icon = config.kpi_3_icon;
-  icon_color = config.kpi_3_icon_color;
-  only_show_icon = config.kpi_3_only_show_icon;
-  size = config.kpi_3_size;
-  title = config.kpi_3_title;
-  title_color = config.kpi_3_title_color;
-  value_color = config.kpi_3_value_color;
+      column_value = config.kpi_3_column;
+      comparison_color_mode = config.kpi_3_comparison_color_mode;
+      comparison_column_1_value = config.kpi_3_comparison_column_1;
+      comparison_column_2_value = config.kpi_3_comparison_column_2;
+      comparison_icon_negative = config.kpi_3_comparison_icon_negative;
+      comparison_icon_positive = config.kpi_3_comparison_icon_positive;
+      comparison_text_color = config.kpi_3_comparison_text_color;
+      comparisons_visible = config.kpi_3_comparisons_visible;
+      icon = config.kpi_3_icon;
+      icon_color = config.kpi_3_icon_color;
+      only_show_icon = config.kpi_3_only_show_icon;
+      size = config.kpi_3_size;
+      title = config.kpi_3_title;
+      title_color = config.kpi_3_title_color;
+      value_color = config.kpi_3_value_color;
 
     if (column_value!=undefined) {
       document.getElementById(kpi).style.display = "block ";
-
       active_kpi++;
-      applyKPIsettings(
-        kpi,
-        column_value,
-        comparison_color_mode,
-        comparison_column_1_value,
-        comparison_column_2_value,
-        comparison_icon_negative,
-        comparison_icon_positive,
-        comparison_text_color,
-        comparisons_visible,
-        icon,
-        icon_color,
-        only_show_icon,
-        size,
-        title,
-        title_color,
-        value_color,
-      )
+      applyKPIsettings()
     } else {
       document.getElementById(kpi).style.display = "none";
     }
@@ -962,6 +911,7 @@ looker.plugins.visualizations.add({
     document.getElementById("kpi-1").style.width = kpi_width + "%";
     document.getElementById("kpi-2").style.width = kpi_width + "%";
     document.getElementById("kpi-3").style.width = kpi_width + "%";
+
 
       done()
     }
