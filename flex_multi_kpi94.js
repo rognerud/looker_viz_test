@@ -1,4 +1,4 @@
-const column_description = "column_description";
+const column_description = "The number of the column to be used for the KPI";
 const size_description = "size_description";
 const size_default = "large";
 const value_color_default = "black";
@@ -9,48 +9,6 @@ looker.plugins.visualizations.add({
   
 
   options: {
-      kpi_1_icon_title_mode: {
-        type: "string",
-        label: "Icon Title Mode",
-        values: [
-          { "Not on": "not" },
-          { "Icon": "icon" },
-          { "Title": "title" },
-          { "Icon and Title": "icon_and_title" }
-        ],
-        display: "radio",
-        default: "not",
-        section: "KPI1",
-        order: 42
-      },
-      kpi_2_icon_title_mode: {
-        type: "string",
-        label: "Icon Title Mode",
-        values: [
-          { "Not on": "not" },
-          { "Icon": "icon" },
-          { "Title": "title" },
-          { "Icon and Title": "icon_and_title" }
-        ],
-        display: "radio",
-        default: "not",
-        section: "KPI2",
-        order: 42
-      },
-      kpi_3_icon_title_mode: {
-        type: "string",
-        label: "Icon Title Mode",
-        values: [
-          { "Not on": "not" },
-          { "Icon": "icon" },
-          { "Title": "title" },
-          { "Icon and Title": "icon_and_title" }
-        ],
-        display: "radio",
-        default: "not",
-        section: "KPI3",
-        order: 42
-      },
       kpi_1_comparison_1_not_comparative: {
         type: "boolean",
         label: "Comparison 1 should be a comparative",
@@ -72,7 +30,7 @@ looker.plugins.visualizations.add({
         label: "Comparison 1 should be a comparative",
         display: "radio",
         default: true,
-        section: "KPI1",
+        section: "KPI2",
         order: 43
       },
       kpi_2_comparison_2_not_comparative: {
@@ -80,7 +38,7 @@ looker.plugins.visualizations.add({
         label: "Comparison 2 should be a comparative",
         display: "radio",
         default: true,
-        section: "KPI1",
+        section: "KPI2",
         order: 43
       },
       kpi_3_comparison_1_not_comparative: {
@@ -157,6 +115,7 @@ looker.plugins.visualizations.add({
         label: "color of icon if used",
         display: "color",
         section: "KPI1",
+        default: "#000000",
         order: 12
       },
       kpi_1_comparison_column_1: {
@@ -213,9 +172,15 @@ looker.plugins.visualizations.add({
         order: 7
       },
       kpi_1_only_show_icon: {
-        type: "boolean",
-        label: "only show icon for kpi",
-        display: "boolean",
+        type: "string",
+        label: "Icon Title Mode",
+        values: [
+          { "Not on": "not" },
+          { "Icon": "icon" },
+          { "Icon and Title": "icon_and_title" }
+        ],
+        display: "radio",
+        default: "not",
         section: "KPI1",
         default: false,
         order: 42
@@ -341,9 +306,15 @@ looker.plugins.visualizations.add({
         order: 7
       },
       kpi_2_only_show_icon: {
-        type: "boolean",
-        label: "only show icon for kpi",
-        display: "boolean",
+        type: "string",
+        label: "Icon Title Mode",
+        values: [
+          { "Not on": "not" },
+          { "Icon": "icon" },
+          { "Icon and Title": "icon_and_title" }
+        ],
+        display: "radio",
+        default: "not",
         section: "KPI2",
         default: false,
         order: 42
@@ -465,13 +436,19 @@ looker.plugins.visualizations.add({
           {"Color main": "main"},
         ],
         section: "KPI3",
-        default: "comparison-icon",
+        default: "comparison-value",
         order: 7
       },
       kpi_3_only_show_icon: {
-        type: "boolean",
-        label: "only show icon for kpi",
-        display: "boolean",
+        type: "string",
+        label: "Icon Title Mode",
+        values: [
+          { "Not on": "not" },
+          { "Icon": "icon" },
+          { "Icon and Title": "icon_and_title" }
+        ],
+        display: "radio",
+        default: "not",
         section: "KPI3",
         default: false,
         order: 42
@@ -490,22 +467,59 @@ looker.plugins.visualizations.add({
         display: "boolean",
         section: "Main",
         default: false,
+        order: 10
       },
       main_element_negative_color: {
         type: "string",
         label: "color for negative values",
         display: "color",
         section: "Main",
-        default: "green"
+        default: "red",
+        order: 3
       },
       main_element_positive_color: {
         type: "string",
         label: "color for positive values",
         display: "color",
         section: "Main",
-        default: "red"
-      }
+        default: "green",
+        order: 2
+      },
+      main_element_neutral_color: {
+        type: "string",
+        label: "color for neutral values",
+        display: "color",
+        section: "Main",
+        default: "black",
+        order: 4
+
+      },
+      main_element_icon_negative_color: {
+        type: "string",
+        label: "color for negative icons",
+        display: "color",
+        section: "Main",
+        default: "#FF7F7C",
+        order: 7
+
+      },
+      main_element_icon_positive_color: {
+        type: "string",
+        label: "color for positive icons",
+        display: "color",
+        section: "Main",
+        default: "#3C804D",
+        order: 6
+      },
+      main_element_icons_and_values_mode: {
+        type: "boolean",
+        label: "<b> Allow icons and values for each KPI, else icon only visible when Icon Title mode active</b>",
+        display: "boolean",
+        section: "Main",
+        default: false,
+        order: 1
     },
+  },
   
     create: function(element, config) {
   
@@ -514,8 +528,10 @@ looker.plugins.visualizations.add({
       <style>
       .card {
         float:left;
+        -webkit-box-align: center;
+        align-items: center;
         font-weight: 100;
-        margin: auto;
+        margin: 5vh 3vw;
         width: 48%;
         height: 100%;
         text-align: center;
@@ -533,19 +549,27 @@ looker.plugins.visualizations.add({
       .card-value {
           padding: 1vh;
           font-size: 10vh;
-          font-weight: 400;
       }
       
       .card-title {
           padding: 1vh;
           font-size: 8vh;  
+          margin: 2vh 0;
           overflow-wrap: break-word;
       }
       
       .card-comparison {
         padding: 1vh;
-        margin: 0 auto;
+        margin: 5vh 0;
         font-size: 5vh;
+      }
+
+      .card-comparison-value {
+        font-weight: 300;
+      }
+
+      .card-comparison-sign {
+        font-weight: 300;
       }
 
       .card-divider {
@@ -554,6 +578,7 @@ looker.plugins.visualizations.add({
         width: 1px;
         display: inline-block;
         float:left;
+        margin: 15vh 0;
       }
 
       </style>
@@ -567,12 +592,12 @@ looker.plugins.visualizations.add({
         <div class="card-title" id="kpi-1-title">title</div>
         <div class="card-comparison" id="kpi-1-comparisons">
           <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span>
-          <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span>
+          <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span>  
             <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span>
           <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>   
         </div>
       </div>
-      <div class="card-divider" id="kpi-1-divider"></div>
+      <div class="card-divider" id="kpi-2-divider"></div>
       <div class="card" id="kpi-2">
         <div class="card-icon">
           <box-icon id="kpi-2-icon" type="solid" size="15vh" color="#eb4034" name=""></box-icon>
@@ -581,12 +606,12 @@ looker.plugins.visualizations.add({
         <div class="card-title" id="kpi-2-title"></div>
         <div class="card-comparison" id="kpi-2-comparisons">
           <span class="card-comparison-sign" id="kpi-2-1-sign"></span><span class="card-comparison-value" id="kpi-2-1-value"></span>
-          <span class="card-comparison-title" id="kpi-2-1-title"></span>
+          <span class="card-comparison-title" id="kpi-2-1-title"></span>  
             <span class="card-comparison-sign" id="kpi-2-2-sign"></span><span class="card-comparison-value" id="kpi-2-2-value"></span>
           <span class="card-comparison-title" id="kpi-2-2-title"></span>   
         </div>
       </div>
-      <div class="card-divider" id="kpi-2-divider"></div>
+      <div class="card-divider" id="kpi-3-divider"></div>
       <div class="card" id="kpi-3">
       <div class="card-icon">
         <box-icon id="kpi-3-icon" type="solid" size="15vh" color="#eb4034" name=""></box-icon>
@@ -595,7 +620,7 @@ looker.plugins.visualizations.add({
       <div class="card-title" id="kpi-3-title"></div>
       <div class="card-comparison" id="kpi-3-comparisons">
         <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value"></span>
-        <span class="card-comparison-title" id="kpi-3-1-title"></span>
+        <span class="card-comparison-title" id="kpi-3-1-title"></span>  
           <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value"></span>
         <span class="card-comparison-title" id="kpi-3-2-title"></span>   
       </div>
@@ -635,36 +660,36 @@ looker.plugins.visualizations.add({
         function adjustElements(kpi, sizeKPI) {
           document.getElementById(kpi+"-icon").setAttribute("size", sizeKPI*1.3 + "vh");
           document.getElementById(kpi+"-value").style.fontSize = sizeKPI*1.0 + "vh";
-          document.getElementById(kpi+"-title").style.fontSize = sizeKPI/2.17 + "vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/1.67 + "vh";
+          document.getElementById(kpi+"-title").style.fontSize = sizeKPI/3.5 + "vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/5 + "vh";
         }
 
         if (size == "small") {
-          if (icon=="") {
-            sizeKPI = 14;
-          } else {
+          if (icons_and_values_mode) {
             sizeKPI = 10;
+          } else {
+            sizeKPI = 14;
           }
           adjustElements(kpi, sizeKPI)
         } else if (size == "medium") {
-          if (icon=="") {
-            sizeKPI = 20;
+          if (icons_and_values_mode) {
+            sizeKPI = 14;
           } else {
-            sizeKPI = 15;
+            sizeKPI = 19;
           }
           adjustElements(kpi, sizeKPI)
         }
         else if (size == "large") {
-          if (icon=="") {
-            sizeKPI = 28;
+          if (icons_and_values_mode) {
+            sizeKPI = 19;
           } else {
-            sizeKPI = 20;
+            sizeKPI = 27;
           }
           adjustElements(kpi, sizeKPI)
         }
       }
 
-      function colorizeKPImain(color, option, kpi) {
+      function colorizeKPImain(color, color_icon, option, kpi) {
         if (option == "comparison-value") {
           document.getElementById(kpi + "-1-value").style.color = color;
           document.getElementById(kpi + "-1-sign").style.color = color;
@@ -677,10 +702,10 @@ looker.plugins.visualizations.add({
         } else if (option == "main-value") {
           document.getElementById(kpi + "-value").style.color = color;
         } else if (option == "main-icon") {
-          document.getElementById(kpi + "-icon").setAttribute("color", color);
+          document.getElementById(kpi + "-icon").setAttribute("color", color_icon);
         } else if (option == "main") {
           document.getElementById(kpi + "-value").style.color = color;
-          document.getElementById(kpi + "-icon").setAttribute("color", color);
+          document.getElementById(kpi + "-icon").setAttribute("color", color_icon);
         }
       }
 
@@ -697,15 +722,22 @@ looker.plugins.visualizations.add({
         }
       }
 
-      function hideEverythingButIcon(kpi) {
-        document.getElementById(kpi + "-value").style.display = "none";
-        document.getElementById(kpi + "-title").style.display = "none";
-        document.getElementById(kpi + "-comparisons").style.display = "none";
+      function hideEverythingBut(but, kpi) {
+        
+        if (but == "icon") {
+          document.getElementById(kpi + "-value").style.display = "none";
+          document.getElementById(kpi + "-title").style.display = "none";
+          document.getElementById(kpi + "-comparisons").style.display = "none";
+        } else if (but == "icon_and_title") {
+          document.getElementById(kpi + "-title").style.display = "inline-block";
+          document.getElementById(kpi + "-value").style.display = "none";
+          document.getElementById(kpi + "-comparisons").style.display = "none";
+        }
       }
-      function unhideEverythingButIcon(kpi) {
+
+      function showMainElements(kpi) {
         document.getElementById(kpi + "-value").style.display = "block";
         document.getElementById(kpi + "-title").style.display = "block";
-        document.getElementById(kpi + "-comparisons").style.display = "block";
       }
 
       function hideUnusedComparison(kpi, comparison) {
@@ -721,8 +753,6 @@ looker.plugins.visualizations.add({
 
       console.log(queryResponse);
       console.log(config);
-      console.log(details);
-
       
       var all_columns = [];
       all_columns = all_columns.concat(queryResponse.fields.dimension_like).concat(queryResponse.fields.measure_like);
@@ -744,12 +774,6 @@ looker.plugins.visualizations.add({
           unhideUnusedComparison(kpi, "2");
         }
 
-        if (icon != "") {
-          document.getElementById(kpi + "-icon").style.display = "inline-block";
-          } else {
-            document.getElementById(kpi + "-icon").style.display = "none";
-          }
-          
           document.getElementById(kpi + "-icon").setAttribute("name", icon);
           document.getElementById(kpi + "-icon").setAttribute("color", icon_color);
           document.getElementById(kpi + "-value").innerHTML = getRenderedValue(firstRow[column.name]);
@@ -762,12 +786,12 @@ looker.plugins.visualizations.add({
           
           document.getElementById(kpi + "-title").style.color = title_color;
           document.getElementById(kpi + "-value").style.color = value_color;
-          document.getElementById(kpi + "-1-value").style.color = comparison_text_color;
-          document.getElementById(kpi + "-2-value").style.color = comparison_text_color;
+          document.getElementById(kpi + "-1-value").style.color = neutral_color;
+          document.getElementById(kpi + "-2-value").style.color = neutral_color;
           document.getElementById(kpi + "-1-title").style.color = comparison_text_color;
           document.getElementById(kpi + "-2-title").style.color = comparison_text_color;
-          document.getElementById(kpi + "-1-sign").style.color = comparison_text_color;
-          document.getElementById(kpi + "-2-sign").style.color = comparison_text_color;
+          document.getElementById(kpi + "-1-sign").style.color = neutral_color;
+          document.getElementById(kpi + "-2-sign").style.color = neutral_color;
 
           if (comparisons_visible) {
             document.getElementById(kpi + "-comparisons").style.display = "block";
@@ -803,6 +827,7 @@ looker.plugins.visualizations.add({
             if (comparison_value_1>0) {
               colorizeKPImain(
                 config.main_element_positive_color,
+                config.main_element_icon_positive_color,
                 comparison_color_mode,
                 kpi)
               if (comparison_icon_positive.length > 0
@@ -816,6 +841,7 @@ looker.plugins.visualizations.add({
             } else if (comparison_value_1<0) {
               colorizeKPImain(
                 config.main_element_negative_color,
+                config.main_element_icon_negative_color,
                 comparison_color_mode,
                 kpi)
               if (comparison_icon_positive.length > 0
@@ -847,16 +873,37 @@ looker.plugins.visualizations.add({
                 document.getElementById(kpi + "-2-sign").innerHTML = "▾";
             }
           }
-          
-          if (only_show_icon) {
-          hideEverythingButIcon(kpi);
-          document.getElementById(kpi + "-icon").setAttribute("size", "75vh");
+
+          if (only_show_icon=="icon") {
+            hideEverythingBut("icon", kpi);
+            document.getElementById(kpi + "-icon").style.display = "inline-block";
+            document.getElementById(kpi + "-icon").setAttribute("size", "50vh");
+          } else if (only_show_icon=="icon_and_title") {
+            hideEverythingBut("icon_and_title", kpi);
+            document.getElementById(kpi + "-icon").style.display = "inline-block";
+            document.getElementById(kpi + "-title").setAttribute("size", "15vh");
+            document.getElementById(kpi + "-icon").setAttribute("size", "45vh");
           } else {
-          unhideEverythingButIcon(kpi);
+            showMainElements(kpi);
           }
 
   }
 
+  let icon_positive_color = config.main_element_icon_positive_color;
+  let icon_negative_color = config.main_element_icon_negative_color;
+  let neutral_color = config.main_element_neutral_color;
+  
+  const icons_and_values_mode = config.main_element_icons_and_values_mode;
+
+  if (icons_and_values_mode) {
+    document.getElementById("kpi-1" + "-icon").style.display = "inline-block";
+    document.getElementById("kpi-2" + "-icon").style.display = "inline-block";
+    document.getElementById("kpi-3" + "-icon").style.display = "inline-block";     
+  } else {
+    document.getElementById("kpi-1" + "-icon").style.display = "none";
+    document.getElementById("kpi-2" + "-icon").style.display = "none";
+    document.getElementById("kpi-3" + "-icon").style.display = "none";     
+  }
 
   let active_kpi = 0;
 
@@ -879,23 +926,15 @@ looker.plugins.visualizations.add({
     let comparison_1_comparative = config.kpi_1_comparison_1_not_comparative
     let comparison_2_comparative = config.kpi_1_comparison_2_not_comparative
 
-  if (column_value!=undefined) {
-    if (config.main_element_dividers_between_kpis == true) {
-      document.getElementById(kpi + "-divider").style.display = "block";
+    if (column_value!=undefined) {
+      document.getElementById(kpi).style.display = "block ";
+      active_kpi++;
+      applyKPIsettings()
     } else {
-      document.getElementById(kpi + "-divider").style.display = "none";
+      document.getElementById(kpi).style.display = "none";
     }
-    document.getElementById(kpi).style.display = "block ";
 
-    active_kpi++;
-    applyKPIsettings()
-  } else {
-    document.getElementById(kpi + "-divider").style.display = "none";
-    document.getElementById(kpi).style.display = "none";
-  }
-
-  
-  kpi = "kpi-2"
+    kpi = "kpi-2"
     column_value = config.kpi_2_column;
     comparison_color_mode = config.kpi_2_comparison_color_mode;
     comparison_column_1_value = config.kpi_2_comparison_column_1;
@@ -921,13 +960,11 @@ looker.plugins.visualizations.add({
       } else {
         document.getElementById(kpi + "-divider").style.display = "none";
       }
-
       active_kpi++;
       applyKPIsettings()
     } else {
       document.getElementById(kpi).style.display = "none";
       document.getElementById(kpi + "-divider").style.display = "none";
-
     }
 
     kpi = "kpi-3"
@@ -949,15 +986,21 @@ looker.plugins.visualizations.add({
       comparison_1_comparative = config.kpi_3_comparison_1_not_comparative
       comparison_2_comparative = config.kpi_3_comparison_2_not_comparative
   
-    if (column_value!=undefined) {
-      document.getElementById(kpi).style.display = "block ";
-      active_kpi++;
-      applyKPIsettings()
-    } else {
-      document.getElementById(kpi).style.display = "none";
-    }
+      if (column_value!=undefined) {
+        document.getElementById(kpi).style.display = "block ";
+        if (config.main_element_dividers_between_kpis == true) {
+          document.getElementById(kpi + "-divider").style.display = "block";
+        } else {
+          document.getElementById(kpi + "-divider").style.display = "none";
+        }
+        active_kpi++;
+        applyKPIsettings()
+      } else {
+        document.getElementById(kpi).style.display = "none";
+        document.getElementById(kpi + "-divider").style.display = "none";
+      }
 
-    let kpi_width = 100/active_kpi - 1;
+    let kpi_width = (100- active_kpi*4 - 5)/active_kpi - 1 ;
     console.log(kpi_width)
     console.log(kpi_width + "%")
     document.getElementById("kpi-1").style.width = kpi_width + "%";
@@ -965,6 +1008,7 @@ looker.plugins.visualizations.add({
     document.getElementById("kpi-3").style.width = kpi_width + "%";
 
 
-      done()
+    
+    done()
     }
 });
