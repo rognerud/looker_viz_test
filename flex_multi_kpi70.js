@@ -19,8 +19,8 @@ looker.plugins.visualizations.add({
           {"Small": "small"}
         ],
         section: "KPI1",
-        default: "medium",
-        order: 2
+        default: "large",
+        order: 4
       },
       kpi_1_value_color: {
         type: "string",
@@ -52,7 +52,7 @@ looker.plugins.visualizations.add({
         display: "text",
         section: "KPI1",
         default: "",
-        order: 3
+        order: 5
       },
       kpi_1_icon_color: {
         type: "string",
@@ -66,14 +66,14 @@ looker.plugins.visualizations.add({
         label: "column number for comparison 1",
         display: "number",
         section: "KPI1",
-        order: 22
+        order: 3
       },
       kpi_1_comparison_column_2: {
         type: "number",
         label: "column number for comparison 2",
         display: "number",
         section: "KPI1",
-        order: 21
+        order: 4
       },
       kpi_1_comparisons_visible: {
         type: "boolean",
@@ -112,7 +112,7 @@ looker.plugins.visualizations.add({
         ],
         section: "KPI1",
         default: "comparison-icon",
-        order: 21
+        order: 7
       },
       kpi_1_only_show_icon: {
         type: "boolean",
@@ -147,8 +147,8 @@ looker.plugins.visualizations.add({
           {"Small": "small"}
         ],
         section: "KPI2",
-        default: "medium",
-        order: 2
+        default: "large",
+        order: 4
       },
       kpi_2_value_color: {
         type: "string",
@@ -180,7 +180,7 @@ looker.plugins.visualizations.add({
         display: "text",
         section: "KPI2",
         default: "",
-        order: 3
+        order: 5
       },
       kpi_2_icon_color: {
         type: "string",
@@ -194,14 +194,14 @@ looker.plugins.visualizations.add({
         label: "column number for comparison 1",
         display: "number",
         section: "KPI2",
-        order: 22
+        order: 3
       },
       kpi_2_comparison_column_2: {
         type: "number",
         label: "column number for comparison 2",
         display: "number",
         section: "KPI2",
-        order: 21
+        order: 4
       },
       kpi_2_comparisons_visible: {
         type: "boolean",
@@ -240,7 +240,7 @@ looker.plugins.visualizations.add({
         ],
         section: "KPI2",
         default: "comparison-icon",
-        order: 21
+        order: 7
       },
       kpi_2_only_show_icon: {
         type: "boolean",
@@ -275,8 +275,8 @@ looker.plugins.visualizations.add({
           {"Small": "small"}
         ],
         section: "KPI3",
-        default: "medium",
-        order: 2
+        default: "large",
+        order: 4
       },
       kpi_3_value_color: {
         type: "string",
@@ -308,7 +308,7 @@ looker.plugins.visualizations.add({
         display: "text",
         section: "KPI3",
         default: "",
-        order: 3
+        order: 5
       },
       kpi_3_icon_color: {
         type: "string",
@@ -322,14 +322,14 @@ looker.plugins.visualizations.add({
         label: "column number for comparison 1",
         display: "number",
         section: "KPI3",
-        order: 22
+        order: 3
       },
       kpi_3_comparison_column_2: {
         type: "number",
         label: "column number for comparison 2",
         display: "number",
         section: "KPI3",
-        order: 21
+        order: 4
       },
       kpi_3_comparisons_visible: {
         type: "boolean",
@@ -368,7 +368,7 @@ looker.plugins.visualizations.add({
         ],
         section: "KPI3",
         default: "comparison-icon",
-        order: 21
+        order: 7
       },
       kpi_3_only_show_icon: {
         type: "boolean",
