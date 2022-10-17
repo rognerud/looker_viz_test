@@ -521,7 +521,7 @@ looker.plugins.visualizations.add({
           { "Not on": "not" },
           { "Icon": "icon" },
           { "Icon and Title": "icon_and_title" },
-           { "Narrow icon": "icon_narrow" },
+          { "Narrow icon": "icon_narrow" },
         ],
         display: "radio",
         default: "not",
@@ -602,24 +602,35 @@ looker.plugins.visualizations.add({
       // Insert a <style> tag with some styles we'll use later.
       element.innerHTML = `
       <style>
-      .card {
-        float:left;
+      .content-wrapper {
+        font-family: "Google Sans", Roboto, "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: row;
         -webkit-box-align: center;
         align-items: center;
-        font-weight: 100;
-        margin: 5vh 3vw;
-        width: 48%;
+        margin: 10px;
         height: 100%;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: space-evenly;
+      }
+
+      .card {
+        -webkit-box-align: center;
+        font-weight: 100;
         text-align: center;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        display: inline-block;
-        font-family: "Google Sans", "Noto Sans", "Noto Sans JP", "Noto Sans CJK KR", "Noto Sans Arabic UI", "Noto Sans Devanagari UI", "Noto Sans Hebrew", "Noto Sans Thai UI", "Helvetica", "Arial", "sans-serif";
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
       }
       
       .card-icon {
         padding-top: 2vh;
+        display: block;
       }
       
       .card-value {
@@ -631,6 +642,7 @@ looker.plugins.visualizations.add({
           padding: 1vh;
           font-size: 8vh;  
           margin: 2vh 0;
+          overflow: auto;
           overflow-wrap: break-word;
       }
       
@@ -638,8 +650,15 @@ looker.plugins.visualizations.add({
         padding: 1vh;
         margin: 5vh 0;
         font-size: 5vh;
+        width: 100%;
       }
 
+      .card-comparison-progress {
+        position: relative;
+        width: 100%;
+        margin: 5vw 0;
+      }
+      
       .card-comparison-value {
         font-weight: 300;
       }
@@ -652,9 +671,21 @@ looker.plugins.visualizations.add({
         background-color: #000000;
         height: 35vh;
         width: 1px;
-        display: inline-block;
-        float:left;
-        margin: 15vh 0;
+        display: block;
+      }
+      .card-comparison-progress-bar-outer {
+        position: absolute;
+        width: 100%;
+      }
+      .card-comparison-progress-bar-inner {
+        position: absolute;
+        width: 100%;
+      }
+      .card-comparison-progress-bar-text {
+        text-align: center;
+        position: absolute;
+        line-height: 12vh;
+        width: 100%;
       }
 
       </style>
@@ -667,15 +698,17 @@ looker.plugins.visualizations.add({
         <div class="card-value" id="kpi-1-value">50%</div>
         <div class="card-title" id="kpi-1-title">title</div>
         <div class="card-comparison" id="kpi-1-comparisons">
+          <div class="card-comparison-progress" id="kpi-1-progress-bar">
+          <div class="card-comparison-progress-bar-inner" id="kpi-1-1-progress-inner"></div>
           <div class="card-comparison-progress-bar-outer" id="kpi-1-1-progress-outer">
-            <div class="card-comparison-progress-bar-inner" id="kpi-1-1-progress-inner">
-            </div>
+            <div class="card-comparison-progress-bar-text" id="kpi-1-1-progress-text"></div>
+          </div>
           </div>
           <div class="card-comparison-1" id="kpi-1-comparison-1">
-            <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span><span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span> 
+            <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span> <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span> 
           </div> 
           <div class="card-comparison-2" id="kpi-1-comparison-1">
-            <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span><span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>
+            <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span> <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>
           </div>
         </div>
       </div>
@@ -687,10 +720,12 @@ looker.plugins.visualizations.add({
         <div class="card-value" id="kpi-2-value"></div>
         <div class="card-title" id="kpi-2-title"></div>
         <div class="card-comparison" id="kpi-2-comparisons">
-          <div class="card-comparison-progress-bar-outer" id="kpi-2-1-progress-outer">
-            <div class="card-comparison-progress-bar-inner" id="kpi-2-1-progress-inner">
-            </div>
-          </div>
+        <div class="card-comparison-progress" id="kpi-2-progress-bar">
+        <div class="card-comparison-progress-bar-inner" id="kpi-2-1-progress-inner"></div>
+        <div class="card-comparison-progress-bar-outer" id="kpi-2-1-progress-outer">
+          <div class="card-comparison-progress-bar-text" id="kpi-2-1-progress-text"></div>
+        </div>
+        </div>
           <div class="card-comparison-1" id="kpi-2-comparison-1">
             <span class="card-comparison-sign" id="kpi-2-1-sign"></span><span class="card-comparison-value" id="kpi-2-1-value"> </span><span class="card-comparison-title" id="kpi-2-1-title"></span>
           </div>
@@ -699,7 +734,6 @@ looker.plugins.visualizations.add({
           </div>
           </div>
         </div>
-      </div>
       <div class="card-divider" id="kpi-3-divider"></div>
       <div class="card" id="kpi-3">
       <div class="card-icon">
@@ -708,18 +742,23 @@ looker.plugins.visualizations.add({
       <div class="card-value" id="kpi-3-value"></div>
       <div class="card-title" id="kpi-3-title"></div>
       <div class="card-comparison" id="kpi-3-comparisons">
-        <div class="card-comparison-progress-bar-outer" id="kpi-3-1-progress-outer">
-          <div class="card-comparison-progress-bar-inner" id="kpi-3-1-progress-inner"></div>
-        </div>
+      <div class="card-comparison-progress" id="kpi-3-progress-bar">
+      <div class="card-comparison-progress-bar-inner" id="kpi-3-1-progress-inner"></div>
+      <div class="card-comparison-progress-bar-outer" id="kpi-3-1-progress-outer">
+        <div class="card-comparison-progress-bar-text" id="kpi-3-1-progress-text"></div>
+      </div>
+      </div>
         <div class="card-comparison-1" id="kpi-3-comparison-1">
-          <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value"></span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
+          <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value"> </span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
         </div>
         <div class="card-comparison-2" id="kpi-3-comparison-2">
-          <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value"></span><span class="card-comparison-title" id="kpi-3-2-title"></span>   
+          <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value"> </span><span class="card-comparison-title" id="kpi-3-2-title"></span>   
         </div>
       </div>
       </div>
     </div> 
+    </div>
+
 
       `;
     }, 
@@ -753,10 +792,14 @@ looker.plugins.visualizations.add({
 
         function adjustElements(kpi, sizeKPI) {
           document.getElementById(kpi+"-icon").setAttribute("size", sizeKPI*1.3 + "vh");
-          document.getElementById(kpi+"-value").style.fontSize = sizeKPI*1.0 + "vh";
+          document.getElementById(kpi+"-value").style.fontSize = sizeKPI*0.9 + "vh";
           document.getElementById(kpi+"-title").style.fontSize = sizeKPI/3.5 + "vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/4 + "vh";
-          document.getElementById(kpi+"-1-progress-outer").style.height = sizeKPI/3.5 + "vh";
+          document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
+          document.getElementById(kpi+"-1-progress-bar-inner").style.height = sizeKPI/2 + "vh";
+          document.getElementById(kpi+"-1-progress-outer").style.line_height = sizeKPI/2 + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.fontsize = sizeKPI/3.5 + "vh";
+
         }
 
         if (size == "small") {
@@ -824,7 +867,7 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi + "-title").style.display = "none";
           document.getElementById(kpi + "-comparisons").style.display = "none";
         } else if (but == "icon_and_title") {
-          document.getElementById(kpi + "-title").style.display = "inline-block";
+          document.getElementById(kpi + "-title").style.display = "block";
           document.getElementById(kpi + "-value").style.display = "none";
           document.getElementById(kpi + "-comparisons").style.display = "none";
         }
@@ -841,9 +884,9 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi + "-" + comparison + "-title").style.display = "none";
       }
       function unhideUnusedComparison(kpi, comparison) {
-        document.getElementById(kpi + "-" + comparison + "-sign").style.display = "inline";
-        document.getElementById(kpi + "-" + comparison + "-value").style.display = "inline";
-        document.getElementById(kpi + "-" + comparison + "-title").style.display = "inline";
+        document.getElementById(kpi + "-" + comparison + "-sign").style.display = "block";
+        document.getElementById(kpi + "-" + comparison + "-value").style.display = "block";
+        document.getElementById(kpi + "-" + comparison + "-title").style.display = "block";
       }
 
       console.log(queryResponse);
@@ -858,7 +901,7 @@ looker.plugins.visualizations.add({
         var comparison_column_1 = all_columns.at(comparison_column_1_value-1);
         var comparison_column_2 = all_columns.at(comparison_column_2_value-1);
         var column_inner_value = firstRow[column.name].value;
-        var comparison_1_inner_value = firstRow[comparison_column_2.name].value;
+        var comparison_1_inner_value = firstRow[comparison_column_1.name].value;
         var comparison_2_inner_value = firstRow[comparison_column_2.name].value;
   
         if (comparison_column_1_value == undefined || progress_bar) {
@@ -918,15 +961,15 @@ looker.plugins.visualizations.add({
           adjustSizeKPI(size, kpi, icon);
           
           if (progress_bar && comparison_column_1_value != undefined) {
-            document.getElementById(kpi + "-1-progress-outer").style.display = "block";
-            document.getElementById(kpi + "-1-progress-outer").style.background = progress_color_background;
+            document.getElementById(kpi + "-progress-bar").style.display = "block";
+            document.getElementById(kpi + "-progress-bar").style.background = progress_color_background;
             document.getElementById(kpi + "-1-progress-inner").style.background = progress_color_foreground;
-            document.getElementById(kpi + "-1-progress-inner").style.color = neutral_color;
+            document.getElementById(kpi + "-1-progress-text").style.color = neutral_color;
             const inner_progress_width = (comparison_1_inner_value / column_inner_value) * 100;
             document.getElementById(kpi + "-1-progress-inner").style.width = inner_progress_width + "%";
-            document.getElementById(kpi + "-1-progress-inner").innerHTML = inner_progress_width.toFixed(0) + "% of " + getRenderedValue(firstRow[comparison_column_1.name]) ;
+            document.getElementById(kpi + "-1-progress-text").innerHTML = inner_progress_width.toFixed(0) + "% of " + getRenderedValue(firstRow[comparison_column_1.name]) ;
           } else {
-            document.getElementById(kpi + "-1-progress-outer").style.display = "none";
+            document.getElementById(kpi + "-progress-bar").style.display = "none";
           }
 
           document.getElementById(kpi + "-1-sign").innerHTML = "";
@@ -982,18 +1025,27 @@ looker.plugins.visualizations.add({
 
           if (only_show_icon=="icon") {
             hideEverythingBut("icon", kpi);
-            document.getElementById(kpi + "-icon").style.display = "inline-block";
+            document.getElementById(kpi + "-icon").style.display = "block";
             document.getElementById(kpi + "-icon").setAttribute("size", "50vh");
+            document.getElementById(kpi + "-icon").setAttribute("height", "100%");
+            document.getElementById(kpi).setAttribute("flex-shrink", "1");
+
           } else if (only_show_icon=="icon_and_title") {
             hideEverythingBut("icon_and_title", kpi);
-            document.getElementById(kpi + "-icon").style.display = "inline-block";
+            document.getElementById(kpi + "-icon").style.display = "block";
             document.getElementById(kpi + "-title").setAttribute("size", "15vh");
             document.getElementById(kpi + "-icon").setAttribute("size", "45vh");
+            document.getElementById(kpi).setAttribute("flex-shrink", "1");
+
           } else if (only_show_icon=="icon_narrow")  {
             hideEverythingBut("icon", kpi); 
-            document.getElementById(kpi + "-icon").style.display = "inline-block";
+            document.getElementById(kpi + "-icon").style.display = "block";
             document.getElementById(kpi + "-icon").setAttribute("size", "30vh");
+            document.getElementById(kpi + "-icon").setAttribute("height", "100%");
+            document.getElementById(kpi).setAttribute("flex", "0 1 auto");
+
           } else {
+            document.getElementById(kpi).setAttribute("flex", "1 1 auto");
             showMainElements(kpi);
           }
 
@@ -1006,9 +1058,9 @@ looker.plugins.visualizations.add({
   const icons_and_values_mode = config.main_element_icons_and_values_mode;
 
   if (icons_and_values_mode) {
-    document.getElementById("kpi-1" + "-icon").style.display = "inline-block";
-    document.getElementById("kpi-2" + "-icon").style.display = "inline-block";
-    document.getElementById("kpi-3" + "-icon").style.display = "inline-block";     
+    document.getElementById("kpi-1" + "-icon").style.display = "block";
+    document.getElementById("kpi-2" + "-icon").style.display = "block";
+    document.getElementById("kpi-3" + "-icon").style.display = "block";     
   } else {
     document.getElementById("kpi-1" + "-icon").style.display = "none";
     document.getElementById("kpi-2" + "-icon").style.display = "none";
@@ -1043,7 +1095,7 @@ looker.plugins.visualizations.add({
 
 
     if (column_value!=undefined) {
-      document.getElementById(kpi).style.display = "block ";
+      document.getElementById(kpi).style.display = "flex ";
       active_kpi++;
       if (only_show_icon=="icon_narrow") {
         narrow_kpis++;
@@ -1079,7 +1131,7 @@ looker.plugins.visualizations.add({
 
 
     if (column_value!=undefined) {
-      document.getElementById(kpi).style.display = "block ";
+      document.getElementById(kpi).style.display = "flex ";
       if (config.main_element_dividers_between_kpis == true) {
         document.getElementById(kpi + "-divider").style.display = "block";
       } else {
@@ -1120,7 +1172,7 @@ looker.plugins.visualizations.add({
 
   
       if (column_value!=undefined) {
-        document.getElementById(kpi).style.display = "block ";
+        document.getElementById(kpi).style.display = "flex ";
         if (config.main_element_dividers_between_kpis == true) {
           document.getElementById(kpi + "-divider").style.display = "block";
         } else {
@@ -1136,23 +1188,23 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi + "-divider").style.display = "none";
       }
     console.log(narrow_kpis);
-    console.log(((active_kpi-narrow_kpis)+narrow_kpis*0.5));
-    let kpi_width = (100- active_kpi*4 - 5)/((active_kpi-narrow_kpis)+narrow_kpis*0.5) - 1 ;
-    if (config.kpi_1_only_show_icon == "icon_narrow") {
-      document.getElementById("kpi-1").style.width = kpi_width*0.5 + "%";
-    } else {
-      document.getElementById("kpi-1").style.width = kpi_width + "%";
-    }
-    if (config.kpi_2_only_show_icon == "icon_narrow") {
-      document.getElementById("kpi-2").style.width = kpi_width*0.5 + "%";
-    } else {
-      document.getElementById("kpi-2").style.width = kpi_width + "%";
-    }
-    if (config.kpi_3_only_show_icon == "icon_narrow") {
-      document.getElementById("kpi-3").style.width = kpi_width*0.5 + "%";
-    } else {
-      document.getElementById("kpi-3").style.width = kpi_width + "%";
-    }
+    console.log(((active_kpi-narrow_kpis)+narrow_kpis*0.3));
+    // let kpi_width = (100- active_kpi*4 - 5)/((active_kpi-narrow_kpis)+narrow_kpis*0.3) - 1 ;
+    // if (config.kpi_1_only_show_icon == "icon_narrow") {
+    //   document.getElementById("kpi-1").style.width = kpi_width*0.3 + "%";
+    // } else {
+    //   document.getElementById("kpi-1").style.width = kpi_width + "%";
+    // }
+    // if (config.kpi_2_only_show_icon == "icon_narrow") {
+    //   document.getElementById("kpi-2").style.width = kpi_width*0.3 + "%";
+    // } else {
+    //   document.getElementById("kpi-2").style.width = kpi_width + "%";
+    // }
+    // if (config.kpi_3_only_show_icon == "icon_narrow") {
+    //   document.getElementById("kpi-3").style.width = kpi_width*0.3 + "%";
+    // } else {
+    //   document.getElementById("kpi-3").style.width = kpi_width + "%";
+    // }
     
     done()
     }
