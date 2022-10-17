@@ -626,6 +626,7 @@ looker.plugins.visualizations.add({
         align-items: center;
         -webkit-box-pack: center;
         justify-content: center;
+        margin: 5vh 3vh;
       }
       
       .card-icon {
@@ -656,7 +657,6 @@ looker.plugins.visualizations.add({
       .card-comparison-progress {
         position: relative;
         width: 100%;
-        margin: 0 3vw;
       }
       
       .card-comparison-value {
@@ -673,6 +673,7 @@ looker.plugins.visualizations.add({
         width: 1px;
         display: block;
       }
+
       .card-comparison-progress-bar-outer {
         position: absolute;
         width: 100%;
@@ -705,10 +706,10 @@ looker.plugins.visualizations.add({
           </div>
           </div>
           <div class="card-comparison-1" id="kpi-1-comparison-1">
-            <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span> <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span> 
+            <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span>  <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span> 
           </div> 
           <div class="card-comparison-2" id="kpi-1-comparison-1">
-            <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span> <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>
+            <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span>  <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>
           </div>
         </div>
       </div>
@@ -727,10 +728,10 @@ looker.plugins.visualizations.add({
         </div>
         </div>
           <div class="card-comparison-1" id="kpi-2-comparison-1">
-            <span class="card-comparison-sign" id="kpi-2-1-sign"></span><span class="card-comparison-value" id="kpi-2-1-value"> </span><span class="card-comparison-title" id="kpi-2-1-title"></span>
+            <span class="card-comparison-sign" id="kpi-2-1-sign"></span><span class="card-comparison-value" id="kpi-2-1-value">  </span><span class="card-comparison-title" id="kpi-2-1-title"></span>
           </div>
           <div class="card-comparison-2" id="kpi-2-comparison-2">
-            <span class="card-comparison-sign" id="kpi-2-2-sign"></span><span class="card-comparison-value" id="kpi-2-2-value"> </span><span class="card-comparison-title" id="kpi-2-2-title"></span>   
+            <span class="card-comparison-sign" id="kpi-2-2-sign"></span><span class="card-comparison-value" id="kpi-2-2-value">  </span><span class="card-comparison-title" id="kpi-2-2-title"></span>   
           </div>
           </div>
         </div>
@@ -749,10 +750,10 @@ looker.plugins.visualizations.add({
       </div>
       </div>
         <div class="card-comparison-1" id="kpi-3-comparison-1">
-          <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value"> </span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
+          <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value">  </span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
         </div>
         <div class="card-comparison-2" id="kpi-3-comparison-2">
-          <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value"> </span><span class="card-comparison-title" id="kpi-3-2-title"></span>   
+          <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value">  </span><span class="card-comparison-title" id="kpi-3-2-title"></span>   
         </div>
       </div>
       </div>
@@ -884,9 +885,9 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi + "-" + comparison + "-title").style.display = "none";
       }
       function unhideUnusedComparison(kpi, comparison) {
-        document.getElementById(kpi + "-" + comparison + "-sign").style.display = "block";
-        document.getElementById(kpi + "-" + comparison + "-value").style.display = "block";
-        document.getElementById(kpi + "-" + comparison + "-title").style.display = "block";
+        document.getElementById(kpi + "-" + comparison + "-sign").style.display = "inline-block";
+        document.getElementById(kpi + "-" + comparison + "-value").style.display = "inline-block";
+        document.getElementById(kpi + "-" + comparison + "-title").style.display = "inline-block";
       }
 
       console.log(queryResponse);
