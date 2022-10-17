@@ -35,44 +35,50 @@ looker.plugins.visualizations.add({
         order: 50
       },
       kpi_1_progress_bar_color_foreground: {
-        type: "boolean",
+        type: "string",
         label: progress_foreground_description,
         default: progress_foreground_color_default,
+        display: "color",
         section: "KPI1",
         order: 51
       },
       kpi_2_progress_bar_color_foreground: {
-        type: "boolean",
+        type: "string",
         label: progress_foreground_description,
         default: progress_foreground_color_default,
+        display: "color",
         section: "KPI2",
         order: 51
       },
       kpi_3_progress_bar_color_foreground: {
-        type: "boolean",
+        type: "string",
         label: progress_foreground_description,
         default: progress_foreground_color_default,
+        display: "color",
         section: "KPI3",
         order: 51
       },
       kpi_1_progress_bar_color_background: {
-        type: "boolean",
+        type: "string",
         label: progress_background_description,
         default: progress_background_color_default,
+        display: "color",
         section: "KPI1",
         order: 51
       },
       kpi_2_progress_bar_color_background: {
-        type: "boolean",
+        type: "string",
         label: progress_background_description,
         default: progress_background_color_default,
+        display: "color",
         section: "KPI2",
         order: 51
       },
       kpi_3_progress_bar_color_background: {
-        type: "boolean",
+        type: "string",
         label: progress_background_description,
         default: progress_background_color_default,
+        display: "color",
         section: "KPI3",
         order: 51
       },
@@ -583,7 +589,7 @@ looker.plugins.visualizations.add({
       },
       main_element_icons_and_values_mode: {
         type: "boolean",
-        label: "<b> Allow icons and values for each KPI, else icon only visible when Icon Title mode active</b>",
+        label: "Allow icons and values for each KPI, else icon only visible when Icon Title mode active",
         display: "boolean",
         section: "Main",
         default: false,
@@ -661,8 +667,8 @@ looker.plugins.visualizations.add({
         <div class="card-value" id="kpi-1-value">50%</div>
         <div class="card-title" id="kpi-1-title">title</div>
         <div class="card-comparison" id="kpi-1-comparisons">
-          <div class="card-comparison-progress-bar-outer" id="kpi-2-1-progress-outer">
-            <div class="card-comparison-progress-bar-inner" id="kpi-2-1-progress-inner">
+          <div class="card-comparison-progress-bar-outer" id="kpi-1-1-progress-outer">
+            <div class="card-comparison-progress-bar-inner" id="kpi-1-1-progress-inner">
             </div>
           </div>
           <div class="card-comparison-1" id="kpi-1-comparison-1">
@@ -702,8 +708,8 @@ looker.plugins.visualizations.add({
       <div class="card-value" id="kpi-3-value"></div>
       <div class="card-title" id="kpi-3-title"></div>
       <div class="card-comparison" id="kpi-3-comparisons">
-        <div class="card-comparison-progress-bar-outer" id="kpi-2-1-progress-outer">
-          <div class="card-comparison-progress-bar-inner" id="kpi-2-1-progress-inner"></div>
+        <div class="card-comparison-progress-bar-outer" id="kpi-3-1-progress-outer">
+          <div class="card-comparison-progress-bar-inner" id="kpi-3-1-progress-inner"></div>
         </div>
         <div class="card-comparison-1" id="kpi-3-comparison-1">
           <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value"></span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
@@ -750,7 +756,7 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-value").style.fontSize = sizeKPI*1.0 + "vh";
           document.getElementById(kpi+"-title").style.fontSize = sizeKPI/3.5 + "vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/4 + "vh";
-          document.getElementById(kpi+"-progress-outer").style.height = sizeKPI/3.5 + "vh";
+          document.getElementById(kpi+"-1-progress-outer").style.height = sizeKPI/3.5 + "vh";
         }
 
         if (size == "small") {
@@ -915,6 +921,7 @@ looker.plugins.visualizations.add({
             document.getElementById(kpi + "-1-progress-outer").style.display = "block";
             document.getElementById(kpi + "-1-progress-outer").style.background = progress_color_background;
             document.getElementById(kpi + "-1-progress-inner").style.background = progress_color_foreground;
+            document.getElementById(kpi + "-1-progress-inner").style.color = neutral_color;
             const inner_progress_width = (comparison_1_inner_value / column_inner_value) * 100;
             document.getElementById(kpi + "-1-progress-inner").style.width = inner_progress_width + "%";
             document.getElementById(kpi + "-1-progress-inner").innerHTML = inner_progress_width.toFixed(0) + "% of " + getRenderedValue(firstRow[comparison_column_1.name]) ;
@@ -958,7 +965,6 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi + "-2-sign").innerHTML = "";
           if (comparison_2_comparative) {
           
-            console.log("value 2" + comparison_value_2);
             if (comparison_2_inner_value>0) {
               colorizeKPIsecondary(
                 config.main_element_positive_color,
@@ -1033,8 +1039,9 @@ looker.plugins.visualizations.add({
     let comparison_1_comparative = config[kpi_config + "_comparison_1_not_comparative"];
     let comparison_2_comparative = config[kpi_config + "_comparison_2_not_comparative"];
     let progress_bar = config[kpi_config + "_comparison_1_progress_bar"];
-    let progress_color_foreground = config[kpi_config + "_comparison_1_progress_bar"];
-    let progress_color_background = config[kpi_config + "_comparison_1_progress_bar"];
+    let progress_color_foreground = config[kpi_config + "_progress_bar_color_foreground"];
+    let progress_color_background = config[kpi_config + "_progress_bar_color_background"];
+
 
     if (column_value!=undefined) {
       document.getElementById(kpi).style.display = "block ";
@@ -1049,27 +1056,28 @@ looker.plugins.visualizations.add({
 
     kpi_config = "kpi_2";
     kpi = "kpi-2"
-    column_value = config.kpi_2_column;
-    comparison_color_mode = config.kpi_2_comparison_color_mode;
-    comparison_column_1_value = config.kpi_2_comparison_column_1;
-    comparison_column_2_value = config.kpi_2_comparison_column_2;
-    comparison_icon_negative = config.kpi_2_comparison_icon_negative;
-    comparison_icon_positive = config.kpi_2_comparison_icon_positive;
-    comparison_text_color = config.kpi_2_comparison_text_color;
-    comparisons_visible = config.kpi_2_comparisons_visible;
-    icon = config.kpi_2_icon;
-    icon_color = config.kpi_2_icon_color;
-    only_show_icon = config.kpi_2_only_show_icon;
-    size = config.kpi_2_size;
-    title = config.kpi_2_title;
-    title_color = config.kpi_2_title_color;
-    value_color = config.kpi_2_value_color;
-    comparison_1_comparative = config.kpi_2_comparison_1_not_comparative
-    comparison_2_comparative = config.kpi_2_comparison_2_not_comparative
+    comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
+    comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
+    comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
+    comparison_icon_negative = config[kpi_config + "_comparison_icon_negative"];
+    comparison_icon_positive = config[kpi_config + "_comparison_icon_positive"];
+    comparison_text_color = config[kpi_config + "_comparison_text_color"];
+    comparisons_visible = config[kpi_config + "_comparisons_visible"];
+    icon = config[kpi_config + "_icon"];
+    icon_color = config[kpi_config + "_icon_color"];
+    only_show_icon = config[kpi_config + "_only_show_icon"];
+    size = config[kpi_config + "_size"];
+    title = config[kpi_config + "_title"];
+    title_color = config[kpi_config + "_title_color"];
+    value_color = config[kpi_config + "_value_color"];
+    comparison_1_comparative = config[kpi_config + "_comparison_1_not_comparative"];
+    comparison_2_comparative = config[kpi_config + "_comparison_2_not_comparative"];
     progress_bar = config[kpi_config + "_comparison_1_progress_bar"];
-    progress_color_foreground = config[kpi_config + "_comparison_1_progress_bar"];
-    progress_color_background = config[kpi_config + "_comparison_1_progress_bar"];
- 
+    progress_color_foreground = config[kpi_config + "_progress_bar_color_foreground"];
+    progress_color_background = config[kpi_config + "_progress_bar_color_background"];
+
+
+
     if (column_value!=undefined) {
       document.getElementById(kpi).style.display = "block ";
       if (config.main_element_dividers_between_kpis == true) {
@@ -1089,27 +1097,27 @@ looker.plugins.visualizations.add({
 
     kpi_config = "kpi_3";
     kpi = "kpi-3"
-      column_value = config.kpi_3_column;
-      comparison_color_mode = config.kpi_3_comparison_color_mode;
-      comparison_column_1_value = config.kpi_3_comparison_column_1;
-      comparison_column_2_value = config.kpi_3_comparison_column_2;
-      comparison_icon_negative = config.kpi_3_comparison_icon_negative;
-      comparison_icon_positive = config.kpi_3_comparison_icon_positive;
-      comparison_text_color = config.kpi_3_comparison_text_color;
-      comparisons_visible = config.kpi_3_comparisons_visible;
-      icon = config.kpi_3_icon;
-      icon_color = config.kpi_3_icon_color;
-      only_show_icon = config.kpi_3_only_show_icon;
-      size = config.kpi_3_size;
-      title = config.kpi_3_title;
-      title_color = config.kpi_3_title_color;
-      value_color = config.kpi_3_value_color;
-      comparison_1_comparative = config.kpi_3_comparison_1_not_comparative
-      comparison_2_comparative = config.kpi_3_comparison_2_not_comparative
-      progress_bar = config[kpi_config + "_comparison_1_progress_bar"];
-      progress_color_foreground = config[kpi_config + "_comparison_1_progress_bar"];
-      progress_color_background = config[kpi_config + "_comparison_1_progress_bar"];
-    
+    comparison_color_mode = config[kpi_config + "_comparison_color_mode"];
+    comparison_column_1_value = config[kpi_config + "_comparison_column_1"];
+    comparison_column_2_value = config[kpi_config + "_comparison_column_2"];
+    comparison_icon_negative = config[kpi_config + "_comparison_icon_negative"];
+    comparison_icon_positive = config[kpi_config + "_comparison_icon_positive"];
+    comparison_text_color = config[kpi_config + "_comparison_text_color"];
+    comparisons_visible = config[kpi_config + "_comparisons_visible"];
+    icon = config[kpi_config + "_icon"];
+    icon_color = config[kpi_config + "_icon_color"];
+    only_show_icon = config[kpi_config + "_only_show_icon"];
+    size = config[kpi_config + "_size"];
+    title = config[kpi_config + "_title"];
+    title_color = config[kpi_config + "_title_color"];
+    value_color = config[kpi_config + "_value_color"];
+    comparison_1_comparative = config[kpi_config + "_comparison_1_not_comparative"];
+    comparison_2_comparative = config[kpi_config + "_comparison_2_not_comparative"];
+    progress_bar = config[kpi_config + "_comparison_1_progress_bar"];
+    progress_color_foreground = config[kpi_config + "_progress_bar_color_foreground"];
+    progress_color_background = config[kpi_config + "_progress_bar_color_background"];
+
+  
       if (column_value!=undefined) {
         document.getElementById(kpi).style.display = "block ";
         if (config.main_element_dividers_between_kpis == true) {
@@ -1126,8 +1134,9 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi).style.display = "none";
         document.getElementById(kpi + "-divider").style.display = "none";
       }
-
-    let kpi_width = (100- (active_kpi*4 - 5))/((active_kpi-narrow_kpis)+narrow_kpis*0.5) - 1 ;
+    console.log(narrow_kpis);
+    console.log(((active_kpi-narrow_kpis)+narrow_kpis*0.5));
+    let kpi_width = (100- active_kpi*4 - 5)/((active_kpi-narrow_kpis)+narrow_kpis*0.5) - 1 ;
     if (config.kpi_1_only_show_icon == "icon_narrow") {
       document.getElementById("kpi-1").style.width = kpi_width*0.5 + "%";
     } else {
