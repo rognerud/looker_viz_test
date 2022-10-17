@@ -1,17 +1,82 @@
+const column_description = "column_description";
+const size_description = "size_description";
+const size_default = "large";
+const value_color_default = "black";
+
 looker.plugins.visualizations.add({
 
+  
+
   options: {
+      kpi_1_icon_title_mode: {
+        type: "string",
+        label: "Icon Title Mode",
+        values: [
+          { "Not on": "not" },
+          { "Icon": "icon" },
+          { "Title": "title" },
+          { "Icon and Title": "icon_and_title" }
+        ],
+        display: "radio",
+        default: "not",
+        section: "KPI1",
+        order: 42
+      },
+      kpi_2_icon_title_mode: {
+        type: "string",
+        label: "Icon Title Mode",
+        values: [
+          { "Not on": "not" },
+          { "Icon": "icon" },
+          { "Title": "title" },
+          { "Icon and Title": "icon_and_title" }
+        ],
+        display: "radio",
+        default: "not",
+        section: "KPI2",
+        order: 42
+      },
+      kpi_3_icon_title_mode: {
+        type: "string",
+        label: "Icon Title Mode",
+        values: [
+          { "Not on": "not" },
+          { "Icon": "icon" },
+          { "Title": "title" },
+          { "Icon and Title": "icon_and_title" }
+        ],
+        display: "radio",
+        default: "not",
+        section: "KPI3",
+        order: 42
+      },
+      kpi_1_comparison_not_comparative: {
+        type: "boolean",
+        label: "Comparison 1 should be a comparative",
+        display: "radio",
+        default: true,
+        section: "KPI1",
+        order: 43
+      },
+      kpi_2_comparison_not_comparative: {
+        type: "boolean",
+        label: "Comparison 2 should be a comparative",
+        display: "radio",
+        default: true,
+        section: "KPI1",
+        order: 43
+      },
       kpi_1_column: {
         type: "number",
-        label: "column number for kpi",
+        label: column_description,
         display: "number",
         section: "KPI1",
-        default: 0,
+        default: 1,
         order: 1
       },
       kpi_1_size: {
         type: "string",
-        label: "size of kpi",
+        label: size_description,
         display: "select",
         values: [
           {"Large": "large"},
@@ -19,7 +84,7 @@ looker.plugins.visualizations.add({
           {"Small": "small"}
         ],
         section: "KPI1",
-        default: "large",
+        default: size_default,
         order: 4
       },
       kpi_1_value_color: {
@@ -27,7 +92,7 @@ looker.plugins.visualizations.add({
         label: "color of value",
         display: "color",
         section: "KPI1",
-        default: "#000000",
+        default: value_color_default,
         order: 10
       },
       kpi_1_title: {
@@ -132,14 +197,14 @@ looker.plugins.visualizations.add({
       },
       kpi_2_column: {
         type: "number",
-        label: "column number for kpi",
+        label: column_description,
         display: "number",
         section: "KPI2",
         order: 1
       },
       kpi_2_size: {
         type: "string",
-        label: "size of kpi",
+        label: size_description,
         display: "select",
         values: [
           {"Large": "large"},
@@ -147,7 +212,7 @@ looker.plugins.visualizations.add({
           {"Small": "small"}
         ],
         section: "KPI2",
-        default: "large",
+        default: size_default,
         order: 4
       },
       kpi_2_value_color: {
@@ -155,7 +220,7 @@ looker.plugins.visualizations.add({
         label: "color of value",
         display: "color",
         section: "KPI2",
-        default: "#000000",
+        default: value_color_default,
         order: 10
       },
       kpi_2_title: {
@@ -260,14 +325,14 @@ looker.plugins.visualizations.add({
       },
       kpi_3_column: {
         type: "number",
-        label: "column number for kpi",
+        label: column_description,
         display: "number",
         section: "KPI3",
         order: 1
       },
       kpi_3_size: {
         type: "string",
-        label: "size of kpi",
+        label: size_description,
         display: "select",
         values: [
           {"Large": "large"},
@@ -275,7 +340,7 @@ looker.plugins.visualizations.add({
           {"Small": "small"}
         ],
         section: "KPI3",
-        default: "large",
+        default: size_default,
         order: 4
       },
       kpi_3_value_color: {
@@ -283,7 +348,7 @@ looker.plugins.visualizations.add({
         label: "color of value",
         display: "color",
         section: "KPI3",
-        default: "#000000",
+        default: value_color_default,
         order: 10
       },
       kpi_3_title: {
@@ -416,6 +481,7 @@ looker.plugins.visualizations.add({
       <style>
       .card {
         float:left;
+        font-weight: 100;
         margin: auto;
         width: 48%;
         height: 100%;
@@ -448,6 +514,13 @@ looker.plugins.visualizations.add({
         font-size: 5vh;
       }
 
+      .card-divider {
+        background-color: #000000;
+        height: 35vh;
+        width: 1px;
+        display: block;
+      }
+
       </style>
 
     <div class="content-wrapper">
@@ -464,6 +537,7 @@ looker.plugins.visualizations.add({
           <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>   
         </div>
       </div>
+      <div class="card-divider" id="kpi-divider-1"></div>
       <div class="card" id="kpi-2">
         <div class="card-icon">
           <box-icon id="kpi-2-icon" type="solid" size="15vh" color="#eb4034" name=""></box-icon>
@@ -477,6 +551,7 @@ looker.plugins.visualizations.add({
           <span class="card-comparison-title" id="kpi-2-2-title"></span>   
         </div>
       </div>
+      <div class="card-divider" id="kpi-divider-1"></div>
       <div class="card" id="kpi-3">
       <div class="card-icon">
         <box-icon id="kpi-3-icon" type="solid" size="15vh" color="#eb4034" name=""></box-icon>
@@ -583,6 +658,17 @@ looker.plugins.visualizations.add({
         document.getElementById(kpi + "-comparisons").style.display = "block";
       }
 
+      function hideUnusedComparison(kpi, comparison) {
+        document.getElementById(kpi + "-" + comparison + "-sign").style.display = "none";
+        document.getElementById(kpi + "-" + comparison + "-value").style.display = "none";
+        document.getElementById(kpi + "-" + comparison + "-title").style.display = "none";
+      }
+      function unhideUnusedComparison(kpi, comparison) {
+        document.getElementById(kpi + "-" + comparison + "-sign").style.display = "inline";
+        document.getElementById(kpi + "-" + comparison + "-value").style.display = "inline";
+        document.getElementById(kpi + "-" + comparison + "-title").style.display = "inline";
+      }
+
       console.log(queryResponse);
       console.log(config);
       console.log(details);
@@ -610,10 +696,21 @@ looker.plugins.visualizations.add({
         value_color,
       ) {
 
-        var column = all_columns.at(column_value);
-        var comparison_column_1 = all_columns.at(comparison_column_1_value);
-        var comparison_column_2 = all_columns.at(comparison_column_2_value);
+        var column = all_columns.at(column_value+1);
+        var comparison_column_1 = all_columns.at(comparison_column_1_value+1);
+        var comparison_column_2 = all_columns.at(comparison_column_2_value+1);
   
+        if (comparison_column_1_value == undefined) {
+          hideUnusedComparison(kpi, "1");
+        } else {
+          unhideUnusedComparison(kpi, "1");
+        }
+        if (comparison_column_2_value == undefined) {
+          hideUnusedComparison(kpi, "2");
+        } else {
+          unhideUnusedComparison(kpi, "2");
+        }
+
         if (icon != "") {
           document.getElementById(kpi + "-icon").style.display = "inline-block";
           } else {
