@@ -656,7 +656,7 @@ looker.plugins.visualizations.add({
       .card-comparison-progress {
         position: relative;
         width: 100%;
-        margin: 5vw 0;
+        margin: 0 3vw;
       }
       
       .card-comparison-value {
@@ -796,7 +796,7 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-title").style.fontSize = sizeKPI/3.5 + "vh";
           document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/4 + "vh";
           document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-bar-inner").style.height = sizeKPI/2 + "vh";
+          document.getElementById(kpi+"-1-progress-inner").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-outer").style.line_height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-text").style.fontsize = sizeKPI/3.5 + "vh";
 
@@ -1043,9 +1043,12 @@ looker.plugins.visualizations.add({
             document.getElementById(kpi + "-icon").setAttribute("size", "30vh");
             document.getElementById(kpi + "-icon").setAttribute("height", "100%");
             document.getElementById(kpi).setAttribute("flex", "0 1 auto");
+            document.getElementById(kpi).setAttribute("width", "auto");
+
 
           } else {
             document.getElementById(kpi).setAttribute("flex", "1 1 auto");
+            document.getElementById(kpi).setAttribute("width", "100%");
             showMainElements(kpi);
           }
 
