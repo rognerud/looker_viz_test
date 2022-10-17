@@ -67,6 +67,38 @@ looker.plugins.visualizations.add({
         section: "KPI1",
         order: 43
       },
+      kpi_2_comparison_1_not_comparative: {
+        type: "boolean",
+        label: "Comparison 1 should be a comparative",
+        display: "radio",
+        default: true,
+        section: "KPI1",
+        order: 43
+      },
+      kpi_2_comparison_2_not_comparative: {
+        type: "boolean",
+        label: "Comparison 2 should be a comparative",
+        display: "radio",
+        default: true,
+        section: "KPI1",
+        order: 43
+      },
+      kpi_3_comparison_1_not_comparative: {
+        type: "boolean",
+        label: "Comparison 1 should be a comparative",
+        display: "radio",
+        default: true,
+        section: "KPI3",
+        order: 43
+      },
+      kpi_3_comparison_2_not_comparative: {
+        type: "boolean",
+        label: "Comparison 2 should be a comparative",
+        display: "radio",
+        default: true,
+        section: "KPI3",
+        order: 43
+      },
       kpi_1_column: {
         type: "number",
         label: column_description,
@@ -507,6 +539,7 @@ looker.plugins.visualizations.add({
       .card-title {
           padding: 1vh;
           font-size: 8vh;  
+          overflow-wrap: break-word;
       }
       
       .card-comparison {
@@ -596,23 +629,38 @@ looker.plugins.visualizations.add({
         }
       }
 
-      function adjustSizeKPI(size, kpi) {
+      function adjustSizeKPI(size, kpi, icon) {
+        let sizeKPI = 10;
+
+        function adjustElements(kpi, sizeKPI) {
+          document.getElementById(kpi+"-icon").setAttribute("size", sizeKPI*1.3 + "vh");
+          document.getElementById(kpi+"-value").style.fontSize = sizeKPI*1.0 + "vh";
+          document.getElementById(kpi+"-title").style.fontSize = sizeKPI/2.17 + "vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/1.67 + "vh";
+        }
+
         if (size == "small") {
-          document.getElementById(kpi+"-icon").setAttribute("size", "15vh");
-          document.getElementById(kpi+"-value").style.fontSize = "10vh";
-          document.getElementById(kpi+"-title").style.fontSize = "6vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "4vh";
+          if (icon=="") {
+            sizeKPI = 14;
+          } else {
+            sizeKPI = 10;
+          }
+          adjustElements(kpi, sizeKPI)
         } else if (size == "medium") {
-          document.getElementById(kpi+"-icon").setAttribute("size", "25vh");
-          document.getElementById(kpi+"-value").style.fontSize = "20vh";
-          document.getElementById(kpi+"-title").style.fontSize = "10vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
+          if (icon=="") {
+            sizeKPI = 20;
+          } else {
+            sizeKPI = 15;
+          }
+          adjustElements(kpi, sizeKPI)
         }
         else if (size == "large") {
-          document.getElementById(kpi + "-icon").setAttribute("size", "35vh");
-          document.getElementById(kpi+"-value").style.fontSize = "25vh";
-          document.getElementById(kpi+"-title").style.fontSize = "14vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = "5vh";
+          if (icon=="") {
+            sizeKPI = 28;
+          } else {
+            sizeKPI = 20;
+          }
+          adjustElements(kpi, sizeKPI)
         }
       }
 
@@ -745,7 +793,7 @@ looker.plugins.visualizations.add({
             document.getElementById(kpi + "-comparisons").style.display = "none";
           }
           
-          adjustSizeKPI(size, kpi);
+          adjustSizeKPI(size, kpi, icon);
           
           document.getElementById(kpi + "-1-sign").innerHTML = "";
           if (comparison_1_comparative) {
@@ -863,6 +911,8 @@ looker.plugins.visualizations.add({
     title = config.kpi_2_title;
     title_color = config.kpi_2_title_color;
     value_color = config.kpi_2_value_color;
+    comparison_1_comparative = config.kpi_2_comparison_1_not_comparative
+    comparison_2_comparative = config.kpi_2_comparison_2_not_comparative
 
     if (column_value!=undefined) {
       document.getElementById(kpi).style.display = "block ";
@@ -896,7 +946,9 @@ looker.plugins.visualizations.add({
       title = config.kpi_3_title;
       title_color = config.kpi_3_title_color;
       value_color = config.kpi_3_value_color;
-
+      comparison_1_comparative = config.kpi_3_comparison_1_not_comparative
+      comparison_2_comparative = config.kpi_3_comparison_2_not_comparative
+  
     if (column_value!=undefined) {
       document.getElementById(kpi).style.display = "block ";
       active_kpi++;
@@ -905,7 +957,7 @@ looker.plugins.visualizations.add({
       document.getElementById(kpi).style.display = "none";
     }
 
-    let kpi_width = 100/active_kpi;
+    let kpi_width = 100/active_kpi - 1;
     console.log(kpi_width)
     console.log(kpi_width + "%")
     document.getElementById("kpi-1").style.width = kpi_width + "%";
