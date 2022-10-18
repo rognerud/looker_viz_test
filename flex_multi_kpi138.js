@@ -807,7 +807,7 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-inner").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-outer").style.line_height = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.font_size = (sizeKPI/5) + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.fontSize = (sizeKPI/5) + "vh";
           document.getElementById(kpi+"-1-progress-text").style.line_height = sizeKPI/2+1 + "vh";
         }
 
