@@ -2,11 +2,13 @@ const column_description = "The number of the column to be used for the KPI";
 const size_description = "size_description";
 const size_default = "large";
 const value_color_default = "black";
-const comparison_color_default = "#a5a6a1";
+const comparison_color_default = "#A5A6A1";
 const progress_foreground_color_default = "#CBC8CD";
 const progress_background_color_default = "#564C5C";
 const progress_foreground_description = "The color of the foreground in the progress bar";
 const progress_background_description = "The color of the background in the progress  bar";
+const comparison_color_positive_default = "#FF7F7C";
+const comparison_color_negative_default = "#3C804D";
 
 looker.plugins.visualizations.add({
 
@@ -550,7 +552,7 @@ looker.plugins.visualizations.add({
         label: "color for negative values",
         display: "color",
         section: "Main",
-        default: "red",
+        default: comparison_color_negative_default,
         order: 3
       },
       main_element_positive_color: {
@@ -558,7 +560,7 @@ looker.plugins.visualizations.add({
         label: "color for positive values",
         display: "color",
         section: "Main",
-        default: "green",
+        default: comparison_color_positive_default,
         order: 2
       },
       main_element_neutral_color: {
@@ -626,7 +628,7 @@ looker.plugins.visualizations.add({
         align-items: center;
         -webkit-box-pack: center;
         justify-content: center;
-        margin: 5vh 3vh;
+        margin: 6vh 4vh;
       }
       
       .card-icon {
@@ -666,6 +668,11 @@ looker.plugins.visualizations.add({
       .card-comparison-sign {
         font-weight: 300;
       }
+      .card-comparison-title {
+        font-weight: 100;
+        padding-inline-start: 2vh;
+      }
+            
 
       .card-divider {
         background-color: #000000;
@@ -706,10 +713,10 @@ looker.plugins.visualizations.add({
           </div>
           </div>
           <div class="card-comparison-1" id="kpi-1-comparison-1">
-            <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span>  <span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span> 
+            <span class="card-comparison-sign" id="kpi-1-1-sign"></span><span class="card-comparison-value" id="kpi-1-1-value">15 pp</span><span> </span><span class="card-comparison-title" id="kpi-1-1-title">mot y-1</span> 
           </div> 
           <div class="card-comparison-2" id="kpi-1-comparison-1">
-            <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span>  <span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>
+            <span class="card-comparison-sign" id="kpi-1-2-sign"></span><span class="card-comparison-value" id="kpi-1-2-value">10 pp</span><span> </span><span class="card-comparison-title" id="kpi-1-2-title">mot m-1</span>
           </div>
         </div>
       </div>
@@ -728,10 +735,10 @@ looker.plugins.visualizations.add({
         </div>
         </div>
           <div class="card-comparison-1" id="kpi-2-comparison-1">
-            <span class="card-comparison-sign" id="kpi-2-1-sign"></span><span class="card-comparison-value" id="kpi-2-1-value">  </span><span class="card-comparison-title" id="kpi-2-1-title"></span>
+            <span class="card-comparison-sign" id="kpi-2-1-sign"></span><span class="card-comparison-value" id="kpi-2-1-value"><span> </span></span><span class="card-comparison-title" id="kpi-2-1-title"></span>
           </div>
           <div class="card-comparison-2" id="kpi-2-comparison-2">
-            <span class="card-comparison-sign" id="kpi-2-2-sign"></span><span class="card-comparison-value" id="kpi-2-2-value">  </span><span class="card-comparison-title" id="kpi-2-2-title"></span>   
+            <span class="card-comparison-sign" id="kpi-2-2-sign"></span><span class="card-comparison-value" id="kpi-2-2-value"><span> </span></span><span class="card-comparison-title" id="kpi-2-2-title"></span>   
           </div>
           </div>
         </div>
@@ -750,10 +757,10 @@ looker.plugins.visualizations.add({
       </div>
       </div>
         <div class="card-comparison-1" id="kpi-3-comparison-1">
-          <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value">  </span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
+          <span class="card-comparison-sign" id="kpi-3-1-sign"></span><span class="card-comparison-value" id="kpi-3-1-value"><span> </span></span><span class="card-comparison-title" id="kpi-3-1-title"></span>  
         </div>
         <div class="card-comparison-2" id="kpi-3-comparison-2">
-          <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value">  </span><span class="card-comparison-title" id="kpi-3-2-title"></span>   
+          <span class="card-comparison-sign" id="kpi-3-2-sign"></span><span class="card-comparison-value" id="kpi-3-2-value"><span> </span></span><span class="card-comparison-title" id="kpi-3-2-title"></span>   
         </div>
       </div>
       </div>
@@ -799,7 +806,9 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-inner").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-outer").style.line_height = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.fontsize = sizeKPI/3.5 + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.fontsize = sizeKPI/4 + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.line_height = sizeKPI/2 + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.margin = sizeKPI/4 + "vh";
 
         }
 
@@ -966,9 +975,9 @@ looker.plugins.visualizations.add({
             document.getElementById(kpi + "-progress-bar").style.background = progress_color_background;
             document.getElementById(kpi + "-1-progress-inner").style.background = progress_color_foreground;
             document.getElementById(kpi + "-1-progress-text").style.color = neutral_color;
-            const inner_progress_width = (comparison_1_inner_value / column_inner_value) * 100;
-            document.getElementById(kpi + "-1-progress-inner").style.width = inner_progress_width + "%";
-            document.getElementById(kpi + "-1-progress-text").innerHTML = inner_progress_width.toFixed(0) + "% of " + getRenderedValue(firstRow[comparison_column_1.name]) ;
+            const inner_progress_width = (column_inner_value / comparison_1_inner_value) * 100;
+            document.getElementById(kpi + "-1-progress-inner").style.width = Math.min(inner_progress_width, 100) + "%";
+            document.getElementById(kpi + "-1-progress-text").innerHTML = '"' + inner_progress_width.toFixed(0) + '% of ' + getRenderedValue(firstRow[comparison_column_1.name]) + ' '  + getLabel(comparison_column_1) +'"';
           } else {
             document.getElementById(kpi + "-progress-bar").style.display = "none";
           }
