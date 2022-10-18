@@ -3,16 +3,14 @@ const size_description = "size_description";
 const size_default = "large";
 const value_color_default = "black";
 const comparison_color_default = "#A5A6A1";
-const progress_foreground_color_default = "#CBC8CD";
-const progress_background_color_default = "#564C5C";
+const progress_foreground_color_default = "#949090";
+const progress_background_color_default = "#CBC8CD";
 const progress_foreground_description = "The color of the foreground in the progress bar";
 const progress_background_description = "The color of the background in the progress  bar";
-const comparison_color_positive_default = "#FF7F7C";
-const comparison_color_negative_default = "#3C804D";
+const comparison_color_positive_default = "#3C804D";
+const comparison_color_negative_default = "#FF7F7C";
 
 looker.plugins.visualizations.add({
-
-  
 
   options: {
       kpi_1_comparison_1_progress_bar: {
@@ -577,7 +575,7 @@ looker.plugins.visualizations.add({
         label: "color for negative icons",
         display: "color",
         section: "Main",
-        default: "#FF7F7C",
+        default: comparison_color_negative_default,
         order: 7
 
       },
@@ -586,7 +584,7 @@ looker.plugins.visualizations.add({
         label: "color for positive icons",
         display: "color",
         section: "Main",
-        default: "#3C804D",
+        default: comparison_color_positive_default,
         order: 6
       },
       main_element_icons_and_values_mode: {
