@@ -806,9 +806,9 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/4 + "vh";
           document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-inner").style.height = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-outer").style.line_height = sizeKPI/2 + "vh";
+          document.getElementById(kpi+"-1-progress-outer").style.lineHeight  = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-text").style.fontSize = (sizeKPI/5) + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.line_height = sizeKPI/2+1 + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.lineHeight  = sizeKPI/2 + "vh";
         }
 
         if (size == "small") {
