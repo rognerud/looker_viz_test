@@ -691,6 +691,7 @@ looker.plugins.visualizations.add({
       }
       .card-comparison-progress-bar-text {
         text-align: center;
+        vertical-align: middle;
         position: absolute;
         line-height: 12vh;
         width: 100%;
@@ -806,10 +807,8 @@ looker.plugins.visualizations.add({
           document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-inner").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-outer").style.line_height = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.fontsize = sizeKPI/4 + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.line_height = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.margin = sizeKPI/4 + "vh";
-
+          document.getElementById(kpi+"-1-progress-text").style.font_size = (sizeKPI/5) + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.line_height = sizeKPI/2+1 + "vh";
         }
 
         if (size == "small") {
@@ -977,7 +976,8 @@ looker.plugins.visualizations.add({
             document.getElementById(kpi + "-1-progress-text").style.color = neutral_color;
             const inner_progress_width = (column_inner_value / comparison_1_inner_value) * 100;
             document.getElementById(kpi + "-1-progress-inner").style.width = Math.min(inner_progress_width, 100) + "%";
-            document.getElementById(kpi + "-1-progress-text").innerHTML = '"' + inner_progress_width.toFixed(0) + '% of ' + getRenderedValue(firstRow[comparison_column_1.name]) + ' '  + getLabel(comparison_column_1) +'"';
+            document.getElementById(kpi + "-1-progress-text").innerHTML = inner_progress_width.toFixed(0) + '% of ' + getRenderedValue(firstRow[comparison_column_1.name]) + '  ' + getLabel(comparison_column_1) ;
+
           } else {
             document.getElementById(kpi + "-progress-bar").style.display = "none";
           }
