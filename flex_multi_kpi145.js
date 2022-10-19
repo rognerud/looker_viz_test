@@ -800,12 +800,12 @@ looker.plugins.visualizations.add({
         function adjustElements(kpi, sizeKPI) {
           document.getElementById(kpi+"-icon").setAttribute("size", sizeKPI*1.3 + "vh");
           document.getElementById(kpi+"-value").style.fontSize = sizeKPI*0.9 + "vh";
-          document.getElementById(kpi+"-title").style.fontSize = sizeKPI/3.5 + "vh";
-          document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/4 + "vh";
+          document.getElementById(kpi+"-title").style.fontSize = sizeKPI/3 + "vh";
+          document.getElementById(kpi+"-comparisons").style.fontSize = sizeKPI/3.5 + "vh";
           document.getElementById(kpi+"-progress-bar").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-inner").style.height = sizeKPI/2 + "vh";
           document.getElementById(kpi+"-1-progress-outer").style.lineHeight  = sizeKPI/2 + "vh";
-          document.getElementById(kpi+"-1-progress-text").style.fontSize = (sizeKPI/4) + "vh";
+          document.getElementById(kpi+"-1-progress-text").style.fontSize = (sizeKPI/3.5) + "vh";
           document.getElementById(kpi+"-1-progress-text").style.lineHeight  = sizeKPI/2 + "vh";
         }
 
